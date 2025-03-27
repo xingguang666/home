@@ -1,0 +1,42 @@
+name: Auto Deploy
+
+on:
+  # 监听源仓库的推送事件
+  repository_dispatch:
+    types: [sync]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout source repository
+        uses: actions/checkout@v2
+        with:
+          repository: <源仓库的用户名/仓库名>
+          ref: main
+          token: ${{ secrets.ACCESS_TOKEN }}
+
+      - name: Checkout target repository
+        uses: actions/checkout@v2
+        with:
+          path: target
+          ref: main
+          token: ${{ secrets.ACCESS_TOKEN }}
+
+      - name: Sync files
+        run: |
+          rsync -av --delete --exclude '.git/' ./ target/
+
+      - name: Commit and push changes
+        working-directory: target
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+          git add .
+          if git diff --staged --quiet; then
+            echo "No changes to commit."
+          else
+            git commit -m "Sync from source repository"
+            git push
+          fi    
