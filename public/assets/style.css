@@ -1,0 +1,765 @@
+/* public/assets/style.css - 改写后的样式 */
+
+@import url('https://fonts.googleapis.com/css2?family=Kiwi+Maru:wght@500&family=Nunito:wght@700&display=swap');
+
+:root {
+    --primary-color: #6A5ACD; /* 主题紫 */
+    --secondary-pink: #FFA1C9; /* 辅助粉 */
+    --text-light: #f0f0f0;
+    --text-dark: #333;
+    --bg-blur: blur(10px);
+    --card-bg: rgba(0, 0, 0, 0.25);
+    --card-hover-bg: rgba(0, 0, 0, 0.4);
+    --border-radius: 12px;
+    --transition-speed: 0.3s;
+}
+
+html,
+body {
+    width: 100%;
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(145deg, #87CEEB 0%, var(--secondary-pink) 100%);
+    font-family: 'Nunito', 'HarmonyOS_Regular', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    color: var(--text-dark);
+    overflow-x: hidden;
+    -webkit-tap-highlight-color: transparent;
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+/* 顶部小部件 */
+.widgets-container {
+    position: fixed;
+    top: 15px;
+    right: 15px;
+    display: flex;
+    gap: 10px;
+    z-index: 1000;
+}
+
+.widget-card {
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: var(--bg-blur);
+    padding: 10px 18px;
+    border-radius: 25px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    color: var(--primary-color);
+    transition: transform var(--transition-speed) ease;
+}
+
+.widget-card:hover {
+    transform: translateY(-2px);
+}
+
+.widget-card i {
+    font-size: 1.1em;
+}
+
+/* 天气图标渐变 */
+.weather-icon-gradient {
+    background: linear-gradient(45deg, #ff9a00, #89CFF0);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+/* 主内容区域 */
+.main-container {
+    position: relative;
+    max-width: 750px;
+    margin: 80px auto 30px auto;
+    background: var(--card-bg);
+    backdrop-filter: var(--bg-blur);
+    border-radius: var(--border-radius);
+    padding: 30px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: var(--text-light);
+    transition: transform var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
+}
+
+.main-container:hover {
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+}
+
+.main-container h1 {
+    text-align: center;
+    color: var(--text-light);
+    margin-bottom: 35px;
+    font-family: 'Kiwi Maru', serif;
+    font-weight: 500;
+    font-size: 2em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.main-container h1 i {
+    color: var(--secondary-pink);
+}
+
+/* 输入框区域 */
+.input-box {
+    position: relative;
+    margin: 30px 0;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50px; /* 更圆润 */
+    overflow: hidden;
+    transition: background var(--transition-speed) ease;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.input-box:focus-within {
+    background: rgba(255, 255, 255, 0.2);
+    box-shadow: 0 0 15px rgba(255, 161, 201, 0.3);
+}
+
+#urlInput {
+    width: 100%;
+    padding: 18px 130px 18px 55px; /* 增加内边距 */
+    border: none;
+    background: transparent;
+    font-size: 16px;
+    color: var(--text-light);
+    outline: none;
+    box-sizing: border-box;
+}
+
+#urlInput::placeholder {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 15px;
+}
+
+.input-icon {
+    position: absolute;
+    left: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 20px;
+    transition: color var(--transition-speed) ease;
+}
+
+.input-box:focus-within .input-icon {
+    color: var(--secondary-pink);
+}
+
+/* 解析按钮 */
+.parse-btn {
+    position: absolute;
+    right: 6px;
+    top: 6px;
+    bottom: 6px;
+    padding: 0 28px;
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-pink));
+    color: white;
+    border: none;
+    border-radius: 40px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 15px;
+    font-weight: 700;
+    font-family: 'Nunito', sans-serif;
+    transition: all var(--transition-speed) ease;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.parse-btn:hover {
+    transform: scale(1.03);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.parse-btn:active {
+    transform: scale(0.98);
+}
+
+.parse-btn i {
+    font-size: 1.1em;
+}
+
+.parse-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: scale(1);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+/* 加载动画 */
+.loading {
+    text-align: center;
+    margin: 30px 0;
+    color: var(--text-light);
+}
+
+.bouncing-loader {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 15px;
+}
+
+.bouncing-loader div {
+    width: 12px;
+    height: 12px;
+    margin: 0 5px;
+    background: var(--secondary-pink);
+    border-radius: 50%;
+    animation: bouncing 0.6s infinite alternate;
+}
+
+.bouncing-loader div:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.bouncing-loader div:nth-child(3) {
+    animation-delay: 0.4s;
+}
+
+@keyframes bouncing {
+    to {
+        opacity: 0.3;
+        transform: translateY(-12px);
+    }
+}
+
+/* 内容展示区域 */
+#contentBox {
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+    margin-top: 30px;
+}
+
+.media-card {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: var(--border-radius);
+    padding: 25px;
+    margin-bottom: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    transition: background var(--transition-speed) ease;
+}
+
+.media-card:hover {
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.media-card h2 {
+    color: var(--text-light);
+    margin-bottom: 20px;
+    font-size: 1.5em;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    padding-bottom: 10px;
+}
+
+.media-card h2 i {
+    color: var(--secondary-pink);
+}
+
+/* 图集网格 */
+.gallery-grid {
+    display: grid;
+    /* Responsive columns: 2 on small screens, 3 on medium, 4 on large */
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); 
+    gap: 15px; /* Increased gap */
+    margin-top: 20px;
+}
+
+.gallery-item {
+    position: relative;
+    cursor: pointer;
+    overflow: hidden;
+    border-radius: 8px; /* Slightly rounded corners */
+    aspect-ratio: 1 / 1; /* Make items square */
+    transition: transform var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
+    background-color: rgba(0, 0, 0, 0.2); /* Placeholder bg */
+}
+
+.gallery-item:hover {
+    transform: translateY(-3px) scale(1.03);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+}
+
+.gallery-item img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Ensure image covers the square area */
+    transition: transform 0.4s ease;
+}
+
+.gallery-item:hover img {
+    transform: scale(1.1);
+}
+
+.image-index {
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    background-color: rgba(0, 0, 0, 0.6);
+    color: white;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: bold;
+    z-index: 2;
+}
+
+/* 单个图片下载按钮 */
+.download-single-btn {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background-color: rgba(0, 0, 0, 0.6);
+    color: white;
+    border: none;
+    border-radius: 50%; /* Circular button */
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 14px;
+    opacity: 0;
+    transition: opacity var(--transition-speed) ease, background-color var(--transition-speed) ease;
+    z-index: 3; /* Ensure it's above index */
+}
+
+.gallery-item:hover .download-single-btn {
+    opacity: 1;
+}
+
+.download-single-btn:hover {
+    background-color: rgba(0, 0, 0, 0.8);
+}
+
+.download-single-btn:active {
+    transform: scale(0.95);
+}
+
+.download-single-btn i {
+    pointer-events: none; /* Prevent icon from interfering with click */
+}
+
+.download-single-btn.downloading i::before {
+    content: "\f110"; /* Font Awesome spinner icon */
+    display: inline-block;
+    animation: fa-spin 1s infinite linear;
+}
+
+/* 视频样式 */
+.video-wrapper {
+    position: relative;
+    padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+    height: 0;
+    overflow: hidden;
+    margin-top: 15px;
+    border-radius: var(--border-radius);
+    background-color: #000;
+}
+
+.video-wrapper video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: var(--border-radius);
+}
+
+/* 下载按钮 */
+.download-button-container {
+    margin-top: 25px;
+    text-align: center;
+}
+
+.download-btn,
+.download-all-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 30px;
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-pink));
+    color: white;
+    border-radius: 30px;
+    text-decoration: none;
+    gap: 10px;
+    font-weight: 700;
+    border: none;
+    cursor: pointer;
+    transition: all var(--transition-speed) ease;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.download-btn:hover,
+.download-all-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.download-btn:active,
+.download-all-btn:active {
+    transform: scale(0.98);
+}
+
+.download-btn i,
+.download-all-btn i {
+    font-size: 1.1em;
+}
+
+.download-btn:disabled,
+.download-all-btn:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+    transform: scale(1);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+/* 图片预览遮罩 */
+.image-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(5px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    cursor: zoom-out;
+    animation: fadeIn 0.3s ease;
+}
+
+.image-overlay img {
+    max-width: 90%;
+    max-height: 90%;
+    border-radius: var(--border-radius);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    animation: scaleIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes scaleIn {
+    from { transform: scale(0.8); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+@keyframes fadeOut {
+    from { opacity: 1; }
+    to { opacity: 0; }
+}
+
+@keyframes scaleOut {
+    from { transform: scale(1); opacity: 1; }
+    to { transform: scale(0.8); opacity: 0; }
+}
+
+/* 提示信息 */
+.alert-popup {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: var(--bg-blur);
+    padding: 12px 25px;
+    border-radius: 25px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    color: var(--text-light);
+    z-index: 10001;
+    font-size: 14px;
+    animation: slideUp 0.3s ease forwards;
+}
+
+@keyframes slideUp {
+    from { transform: translate(-50%, 50px); opacity: 0; }
+    to { transform: translate(-50%, 0); opacity: 1; }
+}
+
+@keyframes slideDown {
+    from { transform: translate(-50%, 0); opacity: 1; }
+    to { transform: translate(-50%, 50px); opacity: 0; }
+}
+
+/* 调试信息 */
+.debug-info {
+    position: fixed;
+    bottom: 10px;
+    left: 10px;
+    background: rgba(0, 0, 0, 0.6);
+    color: #ccc;
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-size: 11px;
+    z-index: 9998;
+    max-width: calc(100% - 20px);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* 用户协议弹窗样式 */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(5px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    animation: fadeIn 0.3s ease forwards;
+}
+
+.modal-content {
+    background: rgba(40, 40, 60, 0.85);
+    backdrop-filter: blur(10px);
+    padding: 30px 40px;
+    border-radius: var(--border-radius);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: var(--text-light);
+    max-width: 600px;
+    width: 90%;
+    max-height: 80vh;
+    display: flex;
+    flex-direction: column;
+    animation: scaleIn 0.3s ease forwards;
+}
+
+.modal-content h2 {
+    text-align: center;
+    color: var(--secondary-pink);
+    margin-bottom: 20px;
+    font-family: 'Kiwi Maru', serif;
+    font-size: 1.8em;
+}
+
+.agreement-text {
+    flex-grow: 1;
+    overflow-y: auto;
+    margin-bottom: 25px;
+    padding-right: 15px; /* For scrollbar */
+    font-size: 14px;
+    line-height: 1.7;
+}
+
+.agreement-text p {
+    margin-bottom: 15px;
+}
+
+.agreement-text ol {
+    padding-left: 25px;
+    margin-top: 10px;
+}
+
+.agreement-text li {
+    margin-bottom: 8px;
+}
+
+/* Custom scrollbar for agreement text */
+.agreement-text::-webkit-scrollbar {
+    width: 6px;
+}
+
+.agreement-text::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+}
+
+.agreement-text::-webkit-scrollbar-thumb {
+    background: var(--secondary-pink);
+    border-radius: 3px;
+}
+
+.agreement-text::-webkit-scrollbar-thumb:hover {
+    background: #ff80b4;
+}
+
+.modal-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
+    margin-top: 10px; /* Add some space above buttons */
+}
+
+.modal-btn {
+    padding: 12px 25px;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: 700;
+    transition: all var(--transition-speed) ease;
+    font-family: 'Nunito', sans-serif;
+}
+
+.agree-btn {
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-pink));
+    color: white;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.agree-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.disagree-btn {
+    background: rgba(255, 255, 255, 0.2);
+    color: var(--text-light);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.disagree-btn:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+/* Keyframes for modal animations */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes fadeOut {
+    from { opacity: 1; }
+    to { opacity: 0; }
+}
+
+@keyframes scaleIn {
+    from { transform: scale(0.9); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+@keyframes scaleOut {
+    from { transform: scale(1); opacity: 1; }
+    to { transform: scale(0.9); opacity: 0; }
+}
+
+/* 底部提示 */
+.bottom-hint {
+    position: fixed;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.5);
+    color: var(--text-light);
+    padding: 8px 15px;
+    border-radius: 5px;
+    font-size: 12px;
+    z-index: 1000;
+    text-align: center;
+    opacity: 0.8;
+    max-width: 90%;
+    box-sizing: border-box;
+}
+
+/* 响应式调整 */
+@media (max-width: 768px) {
+    .main-container {
+        margin: 60px 15px 20px 15px;
+        padding: 20px;
+    }
+
+    .main-container h1 {
+        font-size: 1.6em;
+        margin-bottom: 25px;
+    }
+
+    #urlInput {
+        padding: 15px 110px 15px 50px;
+        font-size: 15px;
+    }
+
+    .input-icon {
+        left: 18px;
+        font-size: 18px;
+    }
+
+    .parse-btn {
+        padding: 0 22px;
+        font-size: 14px;
+        gap: 6px;
+    }
+
+    .media-card {
+        padding: 20px;
+    }
+
+    .media-card h2 {
+        font-size: 1.3em;
+    }
+
+    .gallery-grid {
+        grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+        gap: 10px;
+    }
+
+    .download-btn,
+    .download-all-btn {
+        padding: 10px 25px;
+        font-size: 14px;
+    }
+
+    .widgets-container {
+        top: 10px;
+        right: 10px;
+    }
+
+    .widget-card {
+        padding: 8px 15px;
+        font-size: 13px;
+    }
+}
+
+@media (max-width: 480px) {
+    .main-container h1 {
+        font-size: 1.4em;
+    }
+
+    #urlInput {
+        padding: 14px 100px 14px 45px;
+    }
+
+    .parse-btn {
+        padding: 0 18px;
+        font-size: 13px;
+    }
+
+    .gallery-grid {
+        grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+    }
+
+    .alert-popup {
+        width: calc(100% - 40px);
+        text-align: center;
+        bottom: 20px;
+    }
+}

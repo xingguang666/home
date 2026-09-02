@@ -1,0 +1,85 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="referrer" content="never">
+    <meta referrerpolicy="no-referrer">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>聚合短视频去水印</title>
+    <link href="https://fonts.googleapis.com/css2?family=Kiwi+Maru:wght@500&family=Nunito:wght@700&display=swap" rel="stylesheet">
+    <link href="https://cdn.bootcdn.net/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.bootcdn.net/ajax/libs/FileSaver.js/2.0.5/FileSaver.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+    <div class="widgets-container">
+        <div class="widget-card" id="weatherWidget">
+            <i class="fas fa-cloud-sun" style="background: linear-gradient(45deg, #ff9a00, #89CFF0);-webkit-background-clip: text;background-clip: text;color: transparent;"></i>
+            <span>加载中...</span>
+        </div>
+        <div class="widget-card" id="timeWidget">
+            <i class="fas fa-clock" style="background: linear-gradient(45deg, #ff6b6b, #4ecdc4);-webkit-background-clip: text;background-clip: text;color: transparent;"></i>
+            <span id="currentTime">00:00:00</span>
+        </div>
+    </div>
+
+    <div class="main-container">
+        <h1><i class="fas fa-film"></i>聚合短视频解析</h1>
+
+        <div class="input-box">
+            <i class="fas fa-link input-icon"></i>
+            <input type="text" placeholder="在这里粘贴视频链接" id="urlInput">
+            <button class="parse-btn" onclick="parseContent()" id="parseBtn">
+                <i class="fas fa-wand-magic-sparkles"></i>
+                魔法解析！
+            </button>
+        </div>
+
+        <div class="loading" id="loading" style="display: none;">
+            <div class="bouncing-loader">
+                <div></div>
+                <div></div>
+                <div></div>
+            </div>
+            <p>正在施展解析魔法... ✨</p>
+        </div>
+
+        <div id="contentBox"></div>
+    </div>
+
+    <div class="debug-info" id="debugInfo"></div>
+    
+    <!-- 用户协议弹窗 -->
+    <div id="agreementModal" class="modal-overlay" style="display: none;">
+        <div class="modal-content">
+            <h2>用户协议</h2>
+            <div class="agreement-text">
+                <p>视频解析限用于学习和研究目的；不得将上述内容用于商业或者非法用途，否则，一切后果请用户自负。您必须在下载后的24个小时之内，从您的电脑（其他设备）中彻底删除上述内容。</p>
+                <p>用户使用条款：</p>
+                <ol>
+                    <li>本人仅供分享，不负责商业化</li>
+                    <li>任何商业化行为与本人无关</li>
+                    <li>只提供参考学习使用的，非任何盈利目的</li>
+                    <li>请下载后于24小时内务必删除！谨记！</li>
+                    <li>请尊重创作者的创作！</li>
+                    <li>网站不缓存任何视频。</li>
+                </ol>
+            </div>
+            <div class="modal-buttons">
+                <button id="disagreeBtn" class="modal-btn disagree-btn">不同意</button>
+                <button id="agreeBtn" class="modal-btn agree-btn">同意</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="bottom-hint">
+        提示：本站仅供学习交流，请勿用于非法用途。
+    </div>
+<script src="assets/script.js"></script>
+</body>
+
+</html>

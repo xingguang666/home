@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>墨竹小筑 · Loading v3 预览（字即画面，字即进度）</title>
+<style>
+  :root{
+    --void:#1a1815; --void-soft:#232017;
+    --bones:#e8e4dc; --bones-muted:rgba(232,228,220,.42);
+    --cinnabar:#7a3530;
+    --serif-cn:"Songti SC","STSong","SimSun","Noto Serif CJK SC","Source Han Serif SC",serif;
+    --serif:"Cormorant Garamond","Times New Roman",Georgia,var(--serif-cn);
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;height:100%;background:var(--void);overflow:hidden;}
+  #loader-wrapper{
+    position:fixed;inset:0;width:100%;height:100%;z-index:9999;overflow:hidden;display:block;
+    background:
+      radial-gradient(ellipse 120% 120% at 50% 50%, transparent 50%, rgba(0,0,0,.55) 100%),
+      radial-gradient(ellipse 50% 60% at 75% 25%, rgba(82,104,118,.09) 0%, transparent 65%),
+      radial-gradient(ellipse 90% 80% at 42% 42%, var(--void-soft) 0%, transparent 70%),
+      var(--void);
+    transition:opacity .6s cubic-bezier(.4,0,.2,1),visibility 0s linear .6s,transform .6s cubic-bezier(.4,0,.2,1);
+    font-family:var(--serif-cn);color:var(--bones);
+  }
+  .grain{position:absolute;inset:0;z-index:1;pointer-events:none;opacity:.035;mix-blend-mode:screen;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-size:120px 120px;}
+  .stage{position:absolute;inset:0;z-index:2;}
+  .pinyin{position:absolute;left:clamp(48px,11vw,160px);top:calc(50vh - clamp(2.5rem,6vh,4rem));margin:0;
+    writing-mode:vertical-rl;text-orientation:mixed;font-family:var(--serif);font-size:.72rem;font-weight:400;
+    letter-spacing:.34em;line-height:1.9;color:var(--bones-muted);white-space:nowrap;
+    opacity:0;transform:translateY(-12px);animation:slip-in .3s cubic-bezier(.22,1,.36,1) .08s forwards;}
+  .mark{position:absolute;left:clamp(64px,14vw,200px);top:50%;transform:translateY(-46%);margin:0;
+    display:inline-flex;flex-direction:column;font-family:var(--serif-cn);font-weight:400;
+    font-size:clamp(4rem,11vh,7rem);line-height:1.34;letter-spacing:.04em;color:var(--bones);}
+  .mark .ch{display:block;opacity:0;transform:translateY(-34px) scale(1.14);filter:blur(4px);
+    animation:drop-in .42s cubic-bezier(.34,1.42,.64,1) forwards;
+    animation-delay:calc(.18s + var(--i)*.11s);}
+  .signature{position:absolute;right:clamp(48px,10vw,140px);bottom:clamp(52px,12vh,120px);margin:0;
+    writing-mode:vertical-rl;text-orientation:mixed;font-family:var(--serif-cn);font-size:.82rem;
+    font-weight:400;letter-spacing:.22em;color:var(--cinnabar);
+    opacity:0;animation:fade-in .35s cubic-bezier(.22,1,.36,1) .75s forwards;}
+  @keyframes slip-in{to{opacity:1;transform:translateY(0);}}
+  @keyframes drop-in{0%{opacity:0;transform:translateY(-34px) scale(1.14);filter:blur(4px);}
+    55%{opacity:1;filter:blur(.5px);}100%{opacity:1;transform:translateY(0) scale(1);filter:blur(0);}}
+  @keyframes fade-in{to{opacity:1;}}
+  @media (max-width:480px){
+    .pinyin{left:clamp(30px,9vw,64px);top:calc(50vh - clamp(2rem,5vh,3rem));font-size:.62rem;letter-spacing:.26em;}
+    .mark{left:clamp(40px,11vw,80px);font-size:clamp(3.4rem,13vh,4.8rem);}
+    .signature{right:clamp(30px,9vw,70px);bottom:clamp(44px,11vh,90px);font-size:.74rem;}
+  }
+  @media (prefers-reduced-motion:reduce){
+    .pinyin{opacity:1!important;transform:none!important;animation:none!important;}
+    .mark .ch{opacity:1!important;transform:none!important;filter:none!important;animation:none!important;}
+    .signature{opacity:1!important;animation:none!important;}
+  }
+  .preview-note{position:fixed;top:14px;right:16px;z-index:10000;font-size:11px;
+    color:rgba(232,228,220,.35);letter-spacing:.1em;font-family:var(--serif);pointer-events:none;}
+  /* 重播按钮：方便反复看动效 */
+  .replay{position:fixed;bottom:16px;left:16px;z-index:10000;font-size:11px;
+    color:rgba(232,228,220,.45);letter-spacing:.08em;font-family:var(--serif);cursor:pointer;
+    background:none;border:1px solid rgba(232,228,220,.2);padding:6px 12px;border-radius:3px;
+    transition:all .25s;}
+  .replay:hover{color:var(--bones);border-color:rgba(232,228,220,.5);}
+</style>
+</head>
+<body>
+<div id="loader-wrapper">
+  <div class="grain" aria-hidden="true"></div>
+  <div class="stage" role="status" aria-live="polite" aria-label="正在加载墨竹小筑">
+    <p class="pinyin" aria-hidden="true">Mò&nbsp;Zhú<br/>Xiǎo&nbsp;Zhú</p>
+    <h1 class="mark" aria-label="墨竹小筑">
+      <span class="ch" style="--i:0">墨</span>
+      <span class="ch" style="--i:1">竹</span>
+      <span class="ch" style="--i:2">小</span>
+      <span class="ch" style="--i:3">筑</span>
+    </h1>
+    <p class="signature" aria-hidden="true">千&nbsp;帆</p>
+  </div>
+</div>
+<div class="preview-note">墨竹小筑 · Loading v3 · 按 DESIGN.md 校准</div>
+<button class="replay" onclick="(function(){var w=document.getElementById('loader-wrapper');w.style.animation='none';w.offsetHeight;w.style.animation='';var chs=document.querySelectorAll('.ch,.pinyin,.signature');chs.forEach(function(e){e.style.animation='none';e.offsetHeight;e.style.animation='';});})()">↻ 重播动效</button>
+</body>
+</html>

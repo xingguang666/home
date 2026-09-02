@@ -1,0 +1,223 @@
+// scss 全局变量 - 动漫风格响应式设计
+
+// 响应式布局
+@mixin changeWidth($maxWidth: 1200px) {
+  .container {
+    max-width: $maxWidth;
+  }
+}
+
+// 首次调用
+@include changeWidth;
+
+// 动漫风格响应式工具类
+.anime-responsive {
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+// 苹果液态玻璃设计风格 Mixin
+@mixin glass-card($blur: 10px, $radius: 12px) {
+  // 背景：微妙的线性渐变，模拟玻璃反光
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.1),
+    rgba(255, 255, 255, 0.05)
+  );
+  
+  // 核心磨砂效果
+  backdrop-filter: blur($blur);
+  -webkit-backdrop-filter: blur($blur);
+  
+  // 边框：半透明白色，模拟玻璃边缘高光
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-top: 1px solid rgba(255, 255, 255, 0.3);
+  border-left: 1px solid rgba(255, 255, 255, 0.3);
+  
+  // 圆角
+  border-radius: $radius;
+  
+  // 阴影：柔和的投影增加层次感
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.15);
+  
+  // 性能优化：硬件加速（隔离合成层，避免 backdrop-filter 与其它层相互影响）
+  // 注意：will-change 只声明 transform，不声明 backdrop-filter（后者 will-change 无意义
+  // 且永久 will-change 会浪费 GPU 内存——正确做法是只在即将变化的元素上临时使用）
+  transform: translateZ(0);
+  
+  // 过渡效果
+  transition: all 0.3s ease;
+
+  // 悬停效果
+  &:hover {
+    background: linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.15),
+      rgba(255, 255, 255, 0.1)
+    );
+    border-top: 1px solid rgba(255, 255, 255, 0.4);
+    border-left: 1px solid rgba(255, 255, 255, 0.4);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.25);
+  }
+}
+
+/* 小于1380px时 */
+@media (max-width: 1380px) {
+  .el-radio-group {
+    justify-content: center !important;
+  }
+
+  // 优化大屏幕间距
+  .container {
+    padding: 0 3vw;
+  }
+}
+
+/* 小于1280px时 */
+@media (max-width: 1280px) {
+  @include changeWidth($maxWidth: 1100px);
+
+  // 调整动漫装饰元素
+  .container::after {
+    font-size: 1.8rem !important;
+    right: 8% !important;
+  }
+}
+
+/* 小于992px时 */
+@media (max-width: 992px) {
+  @include changeWidth($maxWidth: 900px);
+
+  // 平板设备优化
+  .cards {
+    margin: 8px !important;
+    padding: 16px !important;
+  }
+
+  // 调整装饰元素
+  .container::after {
+    font-size: 1.5rem !important;
+    right: 6% !important;
+    top: 15% !important;
+  }
+}
+
+/* 小于720px时 */
+@media (max-width: 720px) {
+  // 隐藏元素
+  .xs-hidden {
+    display: none;
+  }
+
+  // 移动端动漫风格优化
+  .cards {
+    border-radius: 12px !important;
+    margin: 6px !important;
+    padding: 12px !important;
+    backdrop-filter: blur(10px) !important;
+  }
+
+  // 移动端按钮优化
+  .anime-button {
+    padding: 10px 20px !important;
+    font-size: 0.9rem !important;
+  }
+
+  // 隐藏装饰元素避免干扰
+  .container::after {
+    display: none !important;
+  }
+}
+
+/* 小于480px时 - 小屏手机 */
+@media (max-width: 480px) {
+  .container {
+    padding: 0 4vw !important;
+  }
+
+  .cards {
+    border-radius: 8px !important;
+    margin: 4px !important;
+    padding: 8px !important;
+  }
+
+  // 优化触摸目标
+  .anime-button {
+    min-height: 44px !important; // iOS推荐触摸目标大小
+    padding: 12px 16px !important;
+  }
+
+  // 移动端禁用纯装饰性动画（保留功能性动画如 Loading 落字）
+  // 注意：已移除 * { animation-duration: 0.5s !important } 通配符规则——
+  // 它会破坏所有精心调校的动画时长（含 Loading 入场），且通配符选择器性能开销大。
+  // 这里改为只禁用明确的无功能性装饰动画类。
+  .anime-float,
+  .anime-glow,
+  .anime-rotate {
+    animation: none !important;
+  }
+}
+
+/* 横屏模式优化 */
+@media (max-height: 500px) and (orientation: landscape) {
+  .container {
+    padding: 0 2vw !important;
+  }
+
+  .menu {
+    top: 90% !important;
+  }
+
+  // 横屏时隐藏部分装饰元素
+  .container::after {
+    display: none !important;
+  }
+}
+
+/* ElMessage 提示框居中修复 - 禁用动画，防止向右闪烁 */
+.el-message {
+  top: 20px !important;
+  left: 50% !important;
+  right: auto !important;
+  transform: translateX(-50%) !important;
+  transition: none !important;
+  animation: none !important;
+  min-width: auto !important;
+  max-width: 90vw !important;
+}
+
+.el-message__content {
+  transition: none !important;
+}
+
+/* 高分辨率屏幕优化 */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .cards {
+    border-width: 0.5px !important;
+  }
+
+  .anime-button {
+    border-radius: 12px !important;
+  }
+}
+
+/* 明月浩空音乐播放器提示屏蔽 */
+.myhk-player-tips,
+.myhk-tips,
+.myhk-notice,
+.myhk-notice-box,
+.myhk-msg,
+.myhk-tips-box,
+[class*="myhk"][class*="tip"],
+[class*="myhk"][class*="notice"],
+[class*="myhk"][class*="msg"],
+[class*="myhk"][class*="info"],
+#myhk-tips,
+#myhk-notice,
+#myhk-msg,
+div[style*="position: fixed"][style*="left"][style*="top"]:has(a[href*="myhkw.cn"]),
+div[style*="position:fixed"][style*="left"][style*="top"]:has(a[href*="myhkw.cn"]) {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}

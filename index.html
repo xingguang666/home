@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="Access-Control-Allow-Origin" content="*" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="/images/icon/24f51e04404cc6271e595a7c07a685f4.jpg" />
+    <link rel="apple-touch-icon" href="/images/icon/24f51e04404cc6271e595a7c07a685f4.jpg" />
+    <link rel="bookmark" href="/images/icon/24f51e04404cc6271e595a7c07a685f4.jpg" />
+    <link rel="apple-touch-icon-precomposed" sizes="200x200" href="/images/icon/24f51e04404cc6271e595a7c07a685f4.jpg" />
+    <meta name="description" content="%VITE_SITE_DES%" />
+    <meta name="keywords" content="%VITE_SITE_KEYWORDS%" />
+    <meta name="author" content="%VITE_SITE_AUTHOR%" />
+    <meta name="theme-color" content="#424242" />
+    <title>%VITE_SITE_NAME%</title>
+    <!-- HarmonyOS Sans -->
+    <link rel="stylesheet" href="https://s1.hdslb.com/bfs/static/jinkela/long/font/regular.css?v=%VITE_APP_VERSION%" />
+    <!-- IE 检测 -->
+    <script src="/utils/ie-detect.js"></script>
+    <!-- 标签页标题动态变化 -->
+    <script src="/utils/tab-title.js"></script>
+  </head>
+
+  <body>
+    <div id="app"></div>
+    <noscript>
+      <div style="text-align: center">请开启 JavaScript</div>
+    </noscript>
+    <script type="module" src="/src/main.js"></script>
+
+    <!-- 版本更新缓存清理（依赖 Vite 模板变量，保留内联） -->
+    <script>
+      (function () {
+        var lastCacheClear = localStorage.getItem("lastCacheClear");
+        var currentVersion = "%VITE_APP_VERSION%";
+        var storedVersion = localStorage.getItem("appVersion");
+
+        if (
+          storedVersion !== currentVersion ||
+          !lastCacheClear ||
+          Date.now() - parseInt(lastCacheClear) > 86400000
+        ) {
+          if ("caches" in window) {
+            caches.keys().then(function (cacheNames) {
+              cacheNames.forEach(function (cacheName) {
+                caches.delete(cacheName);
+              });
+            });
+          }
+          localStorage.setItem("appVersion", currentVersion);
+          localStorage.setItem("lastCacheClear", Date.now().toString());
+          if (storedVersion && storedVersion !== currentVersion) {
+            window.location.reload(true);
+          }
+        }
+      })();
+    </script>
+    <!-- jQuery (required by myhkw player) -->
+    <script src="https://unpkg.com/jquery@3.7.1/dist/jquery.min.js"></script>
+    <!-- 播放器控制台日志屏蔽 -->
+    <script src="/utils/console-guard.js"></script>
+    <!-- myhkw.cn 音乐播放器 -->
+    <script type="text/javascript" id="myhk" src="https://myhkw.cn/api/player/1777356644167" key="1777356644167" m="1"></script>
+    <!-- 播放器桥接（隐藏提示 + 底部栏联动） -->
+    <script src="/utils/player-bridge.js"></script>
+  </body>
+</html>

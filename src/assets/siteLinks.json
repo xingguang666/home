@@ -1,0 +1,41 @@
+[
+  {
+    "icon": "Blog",
+    "name": "视频解析",
+    "link": "https://dailyhot-api.zhijieqianyan.cn/"
+  },
+  {
+    "icon": "Cloud",
+    "name": "AI对话（测试）",
+    "link": "#",
+    "action": "$openAIChat"
+  },
+  {
+    "icon": "CompactDisc",
+    "name": "音乐",
+    "link": "/404.html"
+  },
+  {
+    "icon": "Compass",
+    "name": "摸鱼日历",
+    "link": "#",
+    "action": "$openMoyu"
+  },
+  {
+    "icon": "Book",
+    "name": "网址集",
+    "link": "/404.html"
+  },
+  {
+    "icon": "Fire",
+    "name": "今日热榜",
+    "link": "#",
+    "action": "$openZhihuHot"
+  },
+  {
+    "icon": "LaptopCode",
+    "name": "站点监测",
+    "link": "#",
+    "action": "$openApiMonitor"
+  }
+]
