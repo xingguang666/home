@@ -1,9 +1,13 @@
 <template>
   <div :class="store.mobileOpenState ? 'right' : 'right hidden'">
+    <!-- 搜索聚合框 -->
+    <SearchBar />
     <!-- 功能区 -->
     <Func />
     <!-- 网站链接 -->
     <Link />
+    <!-- 倒数日 -->
+    <Countdown />
   </div>
 </template>
 
@@ -11,6 +15,8 @@
 import { mainStore } from "@/store";
 import Func from "@/views/Func/index.vue";
 import Link from "@/components/Links.vue";
+import SearchBar from "@/components/SearchBar.vue";
+import Countdown from "@/components/Countdown.vue";
 const store = mainStore();
 
 

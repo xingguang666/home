@@ -48,6 +48,18 @@
                   <span>{{ workStatus.message }}</span>
                 </div>
               </div>
+              <!-- 今日工作进度条（工作日显示；参考 nozoki 仪表盘的进度隐喻） -->
+              <div
+                class="day-progress"
+                v-if="workStatus.status === 'working' || workStatus.status === 'beforeWork' || workStatus.status === 'offWork'"
+              >
+                <div class="progress-track">
+                  <div class="progress-fill" :style="{ width: workProgress + '%' }"></div>
+                </div>
+                <span class="progress-label">
+                  {{ workStatus.status === 'offWork' ? "今日工作已完成" : `今日工作进度 ${workProgress}%` }}
+                </span>
+              </div>
               <div class="status-info">
                 <span v-if="nextHoliday && workStatus.status !== 'holiday'">{{ nextHoliday.name }}还有 {{ nextHoliday.until }} 天</span>
                 <span v-else>{{ getTimeBasedGreeting() }}</span>
@@ -97,6 +109,8 @@ const offWorkCountdown = ref(null);
 const onWorkCountdown = ref(null);
 // 工作状态
 const workStatus = ref({ status: 'working', label: '距离下班', message: '努力工作中' });
+// 今日工作进度（onTime ~ offTime 区间百分比）
+const workProgress = ref(0);
 
 // 下一个假期
 const nextHoliday = ref(null);
@@ -131,6 +145,18 @@ const updateCountdown = () => {
   offWorkCountdown.value = getCountdownToOffWork(workSettings.offTime);
   onWorkCountdown.value = getCountdownToOnWork(workSettings.onTime);
   workStatus.value = getWorkStatus(workSettings.onTime, workSettings.offTime);
+
+  // 今日工作进度：工作时间区间内的百分比，区间外钳制到 0/100
+  const now = new Date();
+  const toMinutes = (t) => {
+    const [h, m] = t.split(':').map(Number);
+    return h * 60 + m;
+  };
+  const currentMin = now.getHours() * 60 + now.getMinutes();
+  const onMin = toMinutes(workSettings.onTime);
+  const offMin = toMinutes(workSettings.offTime);
+  const pct = ((currentMin - onMin) / Math.max(1, offMin - onMin)) * 100;
+  workProgress.value = Math.max(0, Math.min(100, Math.round(pct)));
 };
 
 // 根据时间获取问候语
@@ -295,6 +321,36 @@ onBeforeUnmount(() => {
 }
 
 .countdown-card {
+  .day-progress {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+
+    .progress-track {
+      width: 100%;
+      height: 3px;
+      border-radius: 2px;
+      background: rgba(232, 228, 220, 0.14);
+      overflow: hidden;
+
+      .progress-fill {
+        height: 100%;
+        border-radius: 2px;
+        background: var(--bamboo, #8b9a6b);
+        transition: width 1s cubic-bezier(0.22, 1, 0.36, 1);
+      }
+    }
+
+    .progress-label {
+      font-family: var(--mono, monospace);
+      font-size: 0.7rem;
+      letter-spacing: 0.08em;
+      color: var(--paper-muted, rgba(232, 228, 220, 0.42));
+    }
+  }
+
   .status-info {
     text-align: center;
     width: 100%;

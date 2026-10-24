@@ -7,7 +7,11 @@
     var style = document.createElement("style");
     // Only hide tips/watermarks, preserve main player UI
     style.textContent =
-      "#myhk-left-top,.myhk-left-top,.myhk-notice,.myhk-tip,.player-tip,.myhk-watermark{display:none!important;opacity:0!important;visibility:hidden!important;pointer-events:none!important}";
+      "#myhk-left-top,.myhk-left-top,.myhk-notice,.myhk-tip,.player-tip,.myhk-watermark{display:none!important;opacity:0!important;visibility:hidden!important;pointer-events:none!important}" +
+      // 播放器装饰层（封面图/封面容器/模糊背景）不拦截指针事件：
+      // 容器 fixed 且 z-index 最大，会挡住底下页面元素的点击。
+      // 播放器自身的控制条（.myhkcontrol 等）不受影响。
+      "#myhkplayer img,#myhkplayer .myhkcover,#myhkplayer .myhkblur-img{pointer-events:none!important}";
     document.head.appendChild(style);
   };
 

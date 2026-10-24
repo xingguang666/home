@@ -324,5 +324,15 @@ onBeforeUnmount(() => {
       overflow-y: hidden;
     }
   }
+
+  // 移动端：菜单按钮移到右上角，避开左下角的 myhkw 播放器浮层
+  // （播放器 fixed、z-index 最大、占位约 300×181，此前菜单按钮被封面图遮挡且无法点击）
+  @media (max-width: 720px) {
+    .menu {
+      top: 16px;
+      left: auto;
+      right: 16px;
+    }
+  }
 }
 </style>

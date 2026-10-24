@@ -256,6 +256,49 @@ super = 128px
 
 ---
 
+## 11 — 增量升级（2026-10，基于 soki.moe / nozoki.soki.moe 令牌提取）
+
+> 用 dembrandt 提取两个参考站的真实 computed tokens 后做的**增量**升级。
+> 原则：吸收长处，不动水墨身份。以下结论有数据背书，非拍脑袋。
+
+### 11.1 提取数据的验证（不需改动，仅记录信心）
+
+- soki.moe 高频缓动 `cubic-bezier(0.22, 1, 0.36, 1)`（16 次）= 本设计系统的 `ease-soft`；`cubic-bezier(0.4, 0, 0.2, 1)` = `ease-quick`。缓动库已被高质量站点验证。
+- soki.moe 强调色 `#d40924`（绯红）+ soft/strong 变体三件套，与本系统朱砂三件套（cinnabar / cinnabar-soft / cinnabar-deep）角色完全一致。「单一强调色」纪律成立。
+
+### 11.2 新增令牌
+
+**动效时长阶梯**（来源：两站提取值 180–450ms，取整收敛为三档）：
+
+| 令牌 | 值 | 用途 |
+|------|-----|------|
+| `--dur-quick` | `200ms` | 微交互反馈（hover、选中态） |
+| `--dur-base` | `350ms` | 常规过渡（卡片、面板） |
+| `--dur-entrance` | `450ms` | 入场编排（配合 stagger） |
+
+**卡片材质技法**（来源：nozoki 的玻璃卡阴影拆解）：
+
+```
+box-shadow:
+  0 8px 28px 0 rgba(0, 0, 0, 0.12),        // 大半径低透明度环境阴影
+  inset 0 1px 0 rgba(255, 255, 255, 0.18); // 顶部 1px 内高光（厚度感关键）
+```
+
+已落地到 `glass-card` mixin（`src/style/global.scss`）。hover 态阴影加深 + 内高光提亮，过渡统一 `var(--dur-base) var(--ease-soft)`。
+
+### 11.3 圆角豁免说明
+
+DESIGN.md 默认圆角 0 纪律针对**编辑排版层**（Loading、大字标题、印章）。主站界面现有的 12px 玻璃卡片属于**功能性 UI 层**，且参考站卡片圆角（nozoki 18px / soki 8–16px）佐证该尺度舒适——保留 12px 不改，不视为违纪。
+
+### 11.4 仪表盘小组件模式（新增组件规范）
+
+新增的仪表盘类卡片（搜索框 / 倒数日 / 天气详情）遵守：
+- 材质用 `glass-card` mixin；标题 `title-md` 宋体；数据数字用 `--mono`。
+- 进度条：1px `ink-hairline` 轨道 + 填充色用 `cinnabar`（唯一强调点）或 `bamboo`，高度 ≤ 4px，禁药丸形大圆头。
+- 空态文案要具体（"添加一个倒数日"而非"暂无数据"）。
+
+---
+
 ## 附录 — CSS 变量定义（复制到全局样式）
 
 ```scss

@@ -84,8 +84,8 @@ export const getNextHoliday = () => {
 
   // 如果今年没有了，返回明年的第一个
   const nextYear = new Date().getFullYear() + 1;
-  const nextYearHolidays = nextYear === 2026 ? HOLIDAYS_2026 : HOLIDAYS_2025;
-  if (nextYearHolidays.length > 0) {
+  const nextYearHolidays = nextYear === 2026 ? HOLIDAYS_2026 : nextYear === 2025 ? HOLIDAYS_2025 : null;
+  if (nextYearHolidays && nextYearHolidays.length > 0) {
     const firstHoliday = nextYearHolidays[0];
     const holidayDate = new Date(firstHoliday.date);
     const diffTime = holidayDate - now;
@@ -98,7 +98,15 @@ export const getNextHoliday = () => {
     };
   }
 
-  return null;
+  // 明年配置尚未维护时，退化为固定的元旦（每年必有），避免返回过去的日期
+  const newYearDate = `${nextYear}-01-01`;
+  const diffDays = Math.ceil((new Date(newYearDate) - now) / (1000 * 60 * 60 * 24));
+  return {
+    name: '元旦',
+    date: newYearDate,
+    until: diffDays,
+    duration: 1
+  };
 };
 
 /**

@@ -274,7 +274,12 @@ export const getWeather = async (city) => {
     }
     const pos = await getBrowserLocation();
     const cityName = await getAmapRegeo(pos.longitude, pos.latitude);
-    return await getAmapWeather(cityName);
+    const result = await getAmapWeather(cityName);
+    // 顺带返回坐标，供天气详情（Open-Meteo）复用，避免二次定位
+    if (result && result.data) {
+      result.data.coords = { latitude: pos.latitude, longitude: pos.longitude };
+    }
+    return result;
   } catch {
     try {
       const ipData = await getIpAddress();
@@ -284,4 +289,86 @@ export const getWeather = async (city) => {
       return null;
     }
   }
+};
+
+/**
+ * 天气详情（逐小时 / 日出日落 / PM2.5）
+ * 数据源 Open-Meteo：免 Key、支持浏览器直连（CORS 开放）。
+ * 高德天气 API 只有实况和天级预报，逐小时与空气质量由 Open-Meteo 补齐。
+ */
+
+// 城市名 → 坐标（IP 定位降级路径拿不到坐标时使用）
+const getOmGeocode = async (city) => {
+  const res = await fetch(
+    `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(city)}&count=1&language=zh&format=json`
+  );
+  const data = await res.json();
+  if (data && data.results && data.results[0]) {
+    return { latitude: data.results[0].latitude, longitude: data.results[0].longitude };
+  }
+  throw new Error("Open-Meteo 地理编码失败");
+};
+
+// PM2.5 → 国标等级描述
+const pm25Level = (value) => {
+  if (value == null) return null;
+  if (value <= 35) return "优";
+  if (value <= 75) return "良";
+  if (value <= 115) return "轻度";
+  if (value <= 150) return "中度";
+  if (value <= 250) return "重度";
+  return "严重";
+};
+
+export const getWeatherDetail = async ({ latitude, longitude, city } = {}) => {
+  let coords = { latitude, longitude };
+  if (coords.latitude == null || coords.longitude == null) {
+    if (!city) throw new Error("缺少定位信息");
+    coords = await getOmGeocode(city);
+  }
+
+  const forecastUrl =
+    `https://api.open-meteo.com/v1/forecast?latitude=${coords.latitude}&longitude=${coords.longitude}` +
+    `&hourly=temperature_2m,weather_code&daily=sunrise,sunset&forecast_days=1&timezone=auto`;
+  const airUrl =
+    `https://air-quality-api.open-meteo.com/v1/air-quality?latitude=${coords.latitude}&longitude=${coords.longitude}` +
+    `&hourly=pm2_5&forecast_days=1&timezone=auto`;
+
+  const [forecastRes, airRes] = await Promise.all([
+    fetch(forecastUrl),
+    fetch(airUrl).catch(() => null),
+  ]);
+  const forecast = await forecastRes.json();
+  const air = airRes ? await airRes.json().catch(() => null) : null;
+
+  if (!forecast || !forecast.hourly || !forecast.hourly.time) {
+    throw new Error("Open-Meteo 返回数据异常");
+  }
+
+  // 只保留当前时刻起的逐小时序列
+  const nowStr = new Date().toISOString().slice(0, 13);
+  const startIdx = Math.max(
+    0,
+    forecast.hourly.time.findIndex((t) => t.slice(0, 13) >= nowStr)
+  );
+  const hourly = forecast.hourly.time.slice(startIdx, startIdx + 12).map((time, i) => ({
+    time,
+    temp: Math.round(forecast.hourly.temperature_2m[startIdx + i]),
+    code: forecast.hourly.weather_code[startIdx + i],
+  }));
+
+  // 当前小时的 PM2.5
+  let pm25 = null;
+  if (air && air.hourly && air.hourly.pm2_5) {
+    const idx = air.hourly.time.findIndex((t) => t.slice(0, 13) >= nowStr);
+    pm25 = idx >= 0 ? Math.round(air.hourly.pm2_5[idx]) : null;
+  }
+
+  return {
+    hourly,
+    sunrise: forecast.daily?.sunrise?.[0]?.slice(11, 16) ?? null,
+    sunset: forecast.daily?.sunset?.[0]?.slice(11, 16) ?? null,
+    pm25,
+    pm25Level: pm25Level(pm25),
+  };
 };

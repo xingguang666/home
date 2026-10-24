@@ -1,5 +1,56 @@
 // scss 全局变量 - 动漫风格响应式设计
 
+// ─── 墨竹小筑设计令牌（DESIGN.md §附录 + §11 增量升级）───
+// 令牌定义以 DESIGN.md 为单一事实来源，此处仅为 CSS 落地。
+:root {
+  /* 墨色系 */
+  --ink-void: #1a1815;
+  --ink-deep: #232017;
+  --ink-mid: #2a2620;
+  --ink-hairline: #3a342a;
+  --ink-overlay: rgba(26, 24, 21, 0.85);
+
+  /* 宣纸白 */
+  --paper-pure: #ffffff;
+  --paper-warm: #e8e4dc;
+  --paper-soft: #c4bdae;
+  --paper-muted: rgba(232, 228, 220, 0.42);
+
+  /* 朱砂（唯一强调） */
+  --cinnabar: #c0392b;
+  --cinnabar-deep: #7a3530;
+  --cinnabar-soft: rgba(192, 57, 43, 0.12);
+
+  /* 竹青（互斥备用） */
+  --bamboo: #8b9a6b;
+
+  /* 字体 */
+  --serif-cn: "Songti SC", "STSong", "SimSun", "Noto Serif CJK SC", "Source Han Serif SC", serif;
+  --serif: "Cormorant Garamond", "Times New Roman", Georgia, var(--serif-cn);
+  --mono: "SF Mono", "JetBrains Mono", "Cascadia Code", Consolas, monospace;
+
+  /* 缓动（全站只用这三种，禁用 ease/linear/ease-in-out 默认值） */
+  --ease-ink-drop: cubic-bezier(0.34, 1.42, 0.64, 1);
+  --ease-soft: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-quick: cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* 动效时长阶梯（参考 nozoki/soki 提取数据：200/250/350/450ms） */
+  --dur-quick: 200ms;
+  --dur-base: 350ms;
+  --dur-entrance: 450ms;
+
+  /* 间距阶梯（8px 基准） */
+  --sp-xxxs: 4px;
+  --sp-xxs: 8px;
+  --sp-xs: 16px;
+  --sp-sm: 24px;
+  --sp-md: 32px;
+  --sp-lg: 48px;
+  --sp-xl: 64px;
+  --sp-xxl: 96px;
+  --sp-super: 128px;
+}
+
 // 响应式布局
 @mixin changeWidth($maxWidth: 1200px) {
   .container {
@@ -16,6 +67,8 @@
 }
 
 // 苹果液态玻璃设计风格 Mixin
+// 2026-10 材质升级：吸收 nozoki.soki.moe 提取的「环境阴影 + 顶部内高光」技法，
+// 过渡改用令牌缓动（此前为 all .3s ease，违反 DESIGN.md 缓动纪律）。
 @mixin glass-card($blur: 10px, $radius: 12px) {
   // 背景：微妙的线性渐变，模拟玻璃反光
   background: linear-gradient(
@@ -23,29 +76,35 @@
     rgba(255, 255, 255, 0.1),
     rgba(255, 255, 255, 0.05)
   );
-  
+
   // 核心磨砂效果
   backdrop-filter: blur($blur);
   -webkit-backdrop-filter: blur($blur);
-  
+
   // 边框：半透明白色，模拟玻璃边缘高光
   border: 1px solid rgba(255, 255, 255, 0.15);
   border-top: 1px solid rgba(255, 255, 255, 0.3);
   border-left: 1px solid rgba(255, 255, 255, 0.3);
-  
+
   // 圆角
   border-radius: $radius;
-  
-  // 阴影：柔和的投影增加层次感
-  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.15);
-  
+
+  // 阴影：大半径低透明度环境阴影 + 顶部 1px 内高光（玻璃卡厚度感的关键）
+  box-shadow:
+    0 8px 28px 0 rgba(0, 0, 0, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.18);
+
   // 性能优化：硬件加速（隔离合成层，避免 backdrop-filter 与其它层相互影响）
   // 注意：will-change 只声明 transform，不声明 backdrop-filter（后者 will-change 无意义
   // 且永久 will-change 会浪费 GPU 内存——正确做法是只在即将变化的元素上临时使用）
   transform: translateZ(0);
-  
-  // 过渡效果
-  transition: all 0.3s ease;
+
+  // 过渡效果：只过渡实际会变的属性，使用令牌缓动
+  transition:
+    background var(--dur-base) var(--ease-soft),
+    border-color var(--dur-base) var(--ease-soft),
+    box-shadow var(--dur-base) var(--ease-soft),
+    transform var(--dur-base) var(--ease-soft);
 
   // 悬停效果
   &:hover {
@@ -56,7 +115,9 @@
     );
     border-top: 1px solid rgba(255, 255, 255, 0.4);
     border-left: 1px solid rgba(255, 255, 255, 0.4);
-    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.25);
+    box-shadow:
+      0 12px 32px 0 rgba(0, 0, 0, 0.18),
+      inset 0 1px 0 rgba(255, 255, 255, 0.24);
   }
 }
 

@@ -59,12 +59,14 @@
         }
       })();
     </script>
-    <!-- jQuery (required by myhkw player) - defer 异步加载，不阻塞渲染 -->
+    <!-- jQuery (required by myhkw player) - defer 异步加载，不阻塞渲染
+         注意：myhkw 播放器脚本依赖 jQuery。两个脚本都加 defer 后，
+         浏览器保证按文档顺序执行（jQuery 先于播放器），既不阻塞渲染也不报错。 -->
     <script defer src="https://unpkg.com/jquery@3.7.1/dist/jquery.min.js"></script>
     <!-- 播放器控制台日志屏蔽 -->
     <script src="/utils/console-guard.js"></script>
     <!-- myhkw.cn 音乐播放器 -->
-    <script type="text/javascript" id="myhk" src="https://myhkw.cn/api/player/1777356644167" key="1777356644167" m="1"></script>
+    <script defer type="text/javascript" id="myhk" src="https://myhkw.cn/api/player/1777356644167" key="1777356644167" m="1"></script>
     <!-- 播放器桥接（隐藏提示 + 底部栏联动） -->
     <script src="/utils/player-bridge.js"></script>
   </body>
