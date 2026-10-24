@@ -3,6 +3,27 @@
   var CHECK_INTERVAL = 300;
   var started = Date.now();
 
+  // 修复：阻止 myhkw 播放器进站自动播放。
+  // myhkw 后台开启「自动播放」后，脚本加载即调 audio.play()，
+  // 在有媒体参与记录的浏览器里会直接出声。
+  // 策略：用户首次交互（点击/按键/触摸）前，拦截 myhkw 音频的播放；
+  // 站内 APlayer 的自动播放开关（settings 可配）不受影响。
+  var userInteracted = false;
+  ["pointerdown", "keydown", "touchstart"].forEach(function (evt) {
+    document.addEventListener(
+      evt,
+      function () {
+        userInteracted = true;
+      },
+      { passive: true }
+    );
+  });
+  var isMyhkAudio = function (audio) {
+    if (audio.closest && audio.closest("#myhkplayer")) return true;
+    var src = audio.currentSrc || audio.src || "";
+    return src.indexOf("myhkw.cn") !== -1;
+  };
+
   var injectStyle = function () {
     var style = document.createElement("style");
     // Only hide tips/watermarks, preserve main player UI
@@ -37,6 +58,11 @@
     if (audio.__hooked) return;
     audio.__hooked = true;
     audio.addEventListener("play", function () {
+      // 用户交互前拦截 myhkw 的自动播放（见文件头注释）
+      if (!userInteracted && isMyhkAudio(audio)) {
+        audio.pause();
+        return;
+      }
       pauseOthers(audio);
       notifyPlay();
     });
