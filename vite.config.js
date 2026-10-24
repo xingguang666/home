@@ -99,19 +99,8 @@ export default ({ mode }) => {
           changeOrigin: true,
           rewrite: (path) => path.replace(/^\/api\/weather/, '/api/WeatherInfo'),
         },
-        // Proxy daily-hot & AI chat requests to avoid SSL renegotiation issues
-        '/api/daily-hot': {
-          target: 'https://apiserver.alcex.cn',
-          changeOrigin: true,
-          rewrite: (path) => path.replace(/^\/api\/daily-hot/, '/daily-hot'),
-          secure: false,
-        },
-        '/api/chat': {
-          target: 'https://apiserver.alcex.cn',
-          changeOrigin: true,
-          rewrite: (path) => path.replace(/^\/api\/chat/, '/v1/chat/completions'),
-          secure: false,
-        },
+        // 2026-10 移除 /api/daily-hot 与 /api/chat 代理：
+        // 上游 apiserver.alcex.cn 已整站下线，热榜死源已删、AI 聊天功能已整体移除。
       },
     },
     resolve: {

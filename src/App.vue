@@ -32,8 +32,6 @@
     </main>
   </Transition>
 
-  <!-- AI聊天组件 -->
-  <AIChat />
   <!-- API监测组件 -->
   <ApiMonitor />
   <!-- 热榜组件 -->
@@ -58,7 +56,6 @@ import MoreSet from "@/views/MoreSet/index.vue";
 import cursorInit from "@/utils/cursor.js";
 import { startSnow, stopSnow } from "@/utils/snow.js";
 
-const AIChat = defineAsyncComponent(() => import("@/components/AIChat.vue"));
 const ApiMonitor = defineAsyncComponent(() => import("@/components/ApiMonitor.vue"));
 const HotList = defineAsyncComponent(() => import("@/components/HotList.vue"));
 const MoyuCalendar = defineAsyncComponent(() => import("@/components/MoyuCalendar.vue"));

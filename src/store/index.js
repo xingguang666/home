@@ -1,6 +1,5 @@
 import { defineStore } from "pinia";
 import { useMusicStore } from "./music";
-import { useChatStore } from "./chat";
 
 export const mainStore = defineStore("main", {
   state: () => ({
@@ -43,4 +42,4 @@ export const mainStore = defineStore("main", {
   },
 });
 
-export { useMusicStore, useChatStore };
+export { useMusicStore };

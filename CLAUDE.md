@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This is a Vue 3 personal homepage project (無名の主页), featuring a modern glassmorphism UI with anime-style aesthetics. It includes real-time weather, music player, AI chat integration, and social links.
+This is a Vue 3 personal homepage project (無名の主页), featuring a modern glassmorphism UI with anime-style aesthetics. It includes real-time weather, music player, and social links. (AI chat removed 2026-10)
 
 ## Development Commands
 
@@ -54,8 +54,7 @@ src/
 │   ├── Main/         # Main layout (Left/Right panels)
 │   ├── Box/          # Box view mode
 │   ├── Func/         # Functional views
-│   ├── MoreSet/      # Settings panel
-│   └── AIChat/       # AI chat feature
+│   └── MoreSet/      # Settings panel
 └── App.vue           # Root component
 ```
 
@@ -75,7 +74,6 @@ The main layout uses a left-right panel structure:
 Global features are mounted at App.vue level:
 - **Loading**: Initial page load animation
 - **Background**: Wallpaper/background management
-- **AIChat**: Floating AI chat panel
 - **Footer**: Player controls and lyrics display
 
 ### State Management
@@ -85,7 +83,7 @@ Global features are mounted at App.vue level:
 - Music player state (volume, autoplay, loop mode)
 - Persisted preferences via `pinia-plugin-persistedstate`
 
-Key persisted fields: `coverType`, `musicVolume`, `playerAutoplay`, `playerLoop`, `chatHistory`
+Key persisted fields: `coverType`, `musicVolume`, `playerAutoplay`, `playerLoop`
 
 ### API Integration
 
@@ -135,11 +133,11 @@ Configured in `vite.config.js`:
 
 ### Security
 
-- AI 聊天走公开代理 API（oiapi.net / apiserver.alcex.cn），无需本地 Key；`.env` 中的高德天气 Key 已被 `.gitignore` 排除，不会进入仓库
+- `.env` 中的高德天气 Key 已被 `.gitignore` 排除，不会进入仓库（AI 聊天功能已于 2026-10 移除）
 
 ### Architecture Notes
 
-- **Store**: 共三个 Pinia store —— `mainStore`（UI 状态）、`musicStore`（播放器）、`chatStore`（AI 聊天历史，均见 `src/store/`）
+- **Store**: 共两个 Pinia store —— `mainStore`（UI 状态）、`musicStore`（播放器），见 `src/store/`
 - **Music**: APlayer + Meting API（`@worstone/vue-aplayer`），另在 index.html 挂载 myhkw.cn 播放器
 - **Weather**: Consolidated in `src/api/index.js` with multi-tier fallback
 - **API Proxies**: Configured in `vite.config.js` for netease music (dev mode only)

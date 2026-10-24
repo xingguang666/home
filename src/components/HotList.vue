@@ -78,12 +78,15 @@
 </template>
 
 <script setup>
-import { Fire, CloseOne, RefreshOne, Error, VideoOne, Search, ReadBook, Youtube, Book, Github } from "@icon-park/vue-next";
+import { Fire, CloseOne, RefreshOne, Error, VideoOne, Search } from "@icon-park/vue-next";
 import { mainStore } from "@/store";
 
 const store = mainStore();
 
 // 热榜配置
+// 2026-10 清理：知乎/B站/微信读书/豆瓣/GitHub 五个源走 apiserver.alcex.cn
+// 代理（/api/daily-hot），该服务器已整站下线（连接失败），故删除；
+// 仅保留实测存活的直连源：百度 / 微博 / 抖音。
 const tabs = [
   {
     key: 'baidu',
@@ -92,14 +95,6 @@ const tabs = [
     apiUrl: 'https://v2.xxapi.cn/api/baiduhot',
     dataField: 'data',
     getUrl: (item) => item.url || `https://www.baidu.com/s?wd=${encodeURIComponent(item.title)}`
-  },
-  {
-    key: 'zhihu',
-    name: '知乎',
-    icon: ReadBook,
-    apiUrl: '/api/daily-hot/zhihu?limit=20',
-    dataField: 'data',
-    getUrl: (item) => item.url || `https://www.zhihu.com/search?q=${encodeURIComponent(item.title)}`
   },
   {
     key: 'weibo',
@@ -116,38 +111,6 @@ const tabs = [
     apiUrl: 'https://oiapi.net/api/DouYinHot',
     dataField: 'data',
     getUrl: (item) => item.url || `https://www.douyin.com/search/${encodeURIComponent(item.title)}`
-  },
-  {
-    key: 'bilibili',
-    name: 'B站',
-    icon: Youtube,
-    apiUrl: '/api/daily-hot/bilibili?limit=20',
-    dataField: 'data',
-    getUrl: (item) => item.url || `https://search.bilibili.com/all?keyword=${encodeURIComponent(item.title)}`
-  },
-  {
-    key: 'weread',
-    name: '微信读书',
-    icon: Book,
-    apiUrl: '/api/daily-hot/weread?limit=20',
-    dataField: 'data',
-    getUrl: (item) => item.url || `https://weread.qq.com/web/search/books?keyword=${encodeURIComponent(item.title)}`
-  },
-  {
-    key: 'douban',
-    name: '豆瓣',
-    icon: Fire,
-    apiUrl: '/api/daily-hot/douban-group?limit=20',
-    dataField: 'data',
-    getUrl: (item) => item.url || `https://www.douban.com/search?q=${encodeURIComponent(item.title)}`
-  },
-  {
-    key: 'github',
-    name: 'GitHub',
-    icon: Github,
-    apiUrl: '/api/daily-hot/github?limit=20',
-    dataField: 'data',
-    getUrl: (item) => item.url || `https://github.com/search?q=${encodeURIComponent(item.title)}`
   }
 ];
 
@@ -193,17 +156,10 @@ const fetchHotList = async () => {
 
     // 不同API返回格式处理
     let dataList = [];
-    if (tab.key === 'zhihu' || tab.key === 'bilibili' || tab.key === 'weread' || tab.key === 'douban' || tab.key === 'github') {
-      // 新API格式: code为数字，data为数组
-      if (result.code === 200 && Array.isArray(result.data)) {
-        dataList = result.data;
-      }
-    } else {
-      // 旧API格式
-      const isSuccess = result.code === 200 || result.code === 1;
-      if (isSuccess && result.data) {
-        dataList = result.data;
-      }
+    // 旧API格式
+    const isSuccess = result.code === 200 || result.code === 1;
+    if (isSuccess && result.data) {
+      dataList = result.data;
     }
 
     if (dataList.length > 0) {
