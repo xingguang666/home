@@ -96,8 +96,8 @@
               </SetItem>
             </el-collapse-item>
 
-            <el-collapse-item title="其他设置" name="4">
-              <div class="set-section set-section--center">设置内容待增加</div>
+            <el-collapse-item title="网站链接管理" name="4">
+              <LinkManager />
             </el-collapse-item>
           </el-collapse>
         </div>
@@ -111,6 +111,7 @@ import { CloseOne, SettingTwo, SuccessPicture, AddOne, Bug } from "@icon-park/vu
 import { mainStore, useMusicStore } from "@/store";
 import { storeToRefs } from "pinia";
 import SetItem from "@/components/SetItem.vue";
+import LinkManager from "@/components/LinkManager.vue";
 import config from "@/../package.json";
 
 const store = mainStore();

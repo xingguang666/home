@@ -1,5 +1,5 @@
 <template>
-  <div v-if="siteLinks[0]" class="links">
+  <div v-if="activeLinks[0]" class="links">
     <div class="line">
       <Icon size="20">
         <Link />
@@ -8,7 +8,7 @@
     </div>
     <!-- 网站列表 -->
     <Swiper
-      v-if="siteLinks[0]"
+      v-if="activeLinks[0]"
       :modules="[Pagination, Mousewheel]"
       :slides-per-view="1"
       :space-between="40"
@@ -55,12 +55,32 @@ const LINKS_PER_PAGE = 6;
 const store = mainStore();
 const musicStore = useMusicStore();
 
+// 自定义链接（设置面板「网站链接管理」写入 localStorage，覆盖默认 JSON）
+const customLinks = ref(null);
+const loadCustomLinks = () => {
+  try {
+    const raw = localStorage.getItem("custom_site_links");
+    const arr = raw ? JSON.parse(raw) : null;
+    customLinks.value = Array.isArray(arr) && arr.length ? arr : null;
+  } catch {
+    customLinks.value = null;
+  }
+};
+loadCustomLinks();
+// 设置面板保存后即时生效，无需刷新
+const onLinksUpdated = () => loadCustomLinks();
+window.addEventListener("siteLinksUpdated", onLinksUpdated);
+onBeforeUnmount(() => window.removeEventListener("siteLinksUpdated", onLinksUpdated));
+
+// 实际生效的链接：自定义优先，回落到默认配置
+const activeLinks = computed(() => customLinks.value || siteLinks);
+
 // 计算网站链接
 const siteLinksList = computed(() => {
   const result = [];
-  for (let i = 0; i < siteLinks.length; i += LINKS_PER_PAGE) {
-    const subArr = siteLinks.slice(i, i + LINKS_PER_PAGE);
-    result.push(subArr);
+  const list = activeLinks.value;
+  for (let i = 0; i < list.length; i += LINKS_PER_PAGE) {
+    result.push(list.slice(i, i + LINKS_PER_PAGE));
   }
   return result;
 });
@@ -74,6 +94,7 @@ const siteIcon = {
   Book,
   Fire,
   LaptopCode,
+  Link,
 };
 
 // 处理外部链接跳转
