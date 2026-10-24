@@ -8,6 +8,8 @@
     <Link />
     <!-- 倒数日 -->
     <Countdown />
+    <!-- RSS 订阅 -->
+    <RssCard />
   </div>
 </template>
 
@@ -17,6 +19,7 @@ import Func from "@/views/Func/index.vue";
 import Link from "@/components/Links.vue";
 import SearchBar from "@/components/SearchBar.vue";
 import Countdown from "@/components/Countdown.vue";
+import RssCard from "@/components/RssCard.vue";
 const store = mainStore();
 
 
