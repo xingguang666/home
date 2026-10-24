@@ -46,7 +46,7 @@
 import { defineAsyncComponent } from "vue";
 import { helloInit, checkDays } from "@/utils/getTime.js";
 import { HamburgerButton, CloseSmall } from "@icon-park/vue-next";
-import { mainStore, useMusicStore } from "@/store";
+import { mainStore } from "@/store";
 import { Icon } from "@vicons/utils";
 import Loading from "@/components/Loading.vue";
 import MainLeft from "@/views/Main/Left.vue";
@@ -64,7 +64,6 @@ const HotList = defineAsyncComponent(() => import("@/components/HotList.vue"));
 const MoyuCalendar = defineAsyncComponent(() => import("@/components/MoyuCalendar.vue"));
 
 const store = mainStore();
-const musicStore = useMusicStore();
 
 // 页面宽度
 const getWidth = () => {

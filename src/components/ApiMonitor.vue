@@ -82,16 +82,6 @@ const successCount = computed(() => apiList.value.filter(a => a.status === 'succ
 const errorCount = computed(() => apiList.value.filter(a => a.status === 'error').length);
 const pendingCount = computed(() => apiList.value.filter(a => a.status === 'pending').length);
 
-// 获取状态文本
-const getStatusText = (status) => {
-  const texts = {
-    success: '正常',
-    error: '异常',
-    pending: '检测中'
-  };
-  return texts[status] || '未知';
-};
-
 // 关闭监测面板
 const closeMonitor = () => {
   store.apiMonitorOpen = false;

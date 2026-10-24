@@ -56,16 +56,6 @@ const getCache = (type) => {
   }
 };
 
-const setCache = (type, url) => {
-  try {
-    const key = `bg_cache_${type}`;
-    localStorage.setItem(key, JSON.stringify({ url, ts: Date.now() }));
-  } catch (_) {
-    void 0;
-    return;
-  }
-};
-
 const preloadImage = (url) =>
   new Promise((resolve, reject) => {
     const img = new Image();

@@ -196,7 +196,7 @@
 
 <script setup>
 import { CloseOne, AddOne, SendOne, ReadBook } from "@icon-park/vue-next";
-import { ref, computed, nextTick, onMounted, onBeforeUnmount, reactive, watch } from "vue";
+import { ref, computed, nextTick, onMounted, onBeforeUnmount, reactive } from "vue";
 import { ElMessage } from "element-plus";
 import { useChatStore } from "@/store";
 import { sendToAPI, clearConversation, AI_MODELS, getRemainingRequests, isRequestLimitExceeded } from "@/api/aiChat";

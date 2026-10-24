@@ -28,7 +28,7 @@
 </template>
 
 <script setup>
-import { MusicMenu, Error } from "@icon-park/vue-next";
+import { MusicMenu } from "@icon-park/vue-next";
 import { getHitokoto } from "@/api";
 import { useMusicStore } from "@/store";
 import debounce from "@/utils/debounce.js";

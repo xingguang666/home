@@ -2,3 +2,6 @@ node_modules
 dist
 .gitignore
 **/*.scss
+*.d.ts
+run-benchmark.cjs
+public/assets/script.js

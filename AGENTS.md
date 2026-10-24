@@ -32,7 +32,7 @@ pnpm format
 
 ### Tech Stack
 - **Framework**: Vue 3 (Composition API with `<script setup>`)
-- **Build Tool**: Vite 4.x
+- **Build Tool**: Vite 5.x (5.4.11)
 - **State Management**: Pinia with persistedstate plugin
 - **UI Library**: Element Plus (auto-imported via unplugin)
 - **Styling**: SCSS with global styles
@@ -47,7 +47,7 @@ src/
 ├── api/              # External API integrations (weather, music, hitokoto)
 ├── assets/           # Static assets (JSON configs, images)
 ├── components/       # Reusable Vue components
-├── store/            # Pinia store (mainStore)
+├── store/            # Pinia stores (mainStore / musicStore / chatStore)
 ├── style/            # Global SCSS styles
 ├── utils/            # Utility functions
 ├── views/            # Page-level components
@@ -135,10 +135,12 @@ Configured in `vite.config.js`:
 
 ### Security
 
-- **IMPORTANT**: `src/api/aiChat.js` API key should be configured via `VITE_AI_API_KEY` in `.env`
+- AI 聊天走公开代理 API（oiapi.net / apiserver.alcex.cn），无需本地 Key；`.env` 中的高德天气 Key 已被 `.gitignore` 排除，不会进入仓库
 
 ### Architecture Notes
 
-- **Music Module**: Built-in parsing via `src/api/music.js`, no external API required
+- **Store**: 共三个 Pinia store —— `mainStore`（UI 状态）、`musicStore`（播放器）、`chatStore`（AI 聊天历史，均见 `src/store/`）
+- **Music**: APlayer + Meting API（`@worstone/vue-aplayer`），另在 index.html 挂载 myhkw.cn 播放器
 - **Weather**: Consolidated in `src/api/index.js` with multi-tier fallback
 - **API Proxies**: Configured in `vite.config.js` for netease music (dev mode only)
+- **Design System**: 视觉规范见 `DESIGN.md`（水墨文人风），改样式前必读
