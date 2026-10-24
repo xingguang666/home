@@ -30,6 +30,11 @@ import { Error as ErrorIcon } from "@icon-park/vue-next";
 const store = mainStore();
 const bgUrl = ref(null);
 const imgTimeout = ref(null);
+// 是否已尝试过降级到本地图。防止连环降级 + 连环通知：
+// - changeBg 失败时静默降级一次（fallbackAttempted=true）
+// - 若降级图渲染仍失败（img @error），才真正通知用户
+// - 新壁纸成功后重置为 false
+const fallbackAttempted = ref(false);
 const emit = defineEmits(["loadComplete"]);
 
 // 壁纸随机数
@@ -91,11 +96,13 @@ const fetchJson = async (url) => {
 
 const changeBg = async (type) => {
   let url = null;
+  let isLocal = false;
 
   try {
     if (type == 0) {
-      // 默认壁纸 (JPG)
+      // 默认壁纸 (JPG) - 本地资源，加载极快，跳过 preload 等待
       url = `/images/background${bgRandom}.jpg`;
+      isLocal = true;
     } else if (type == 5) {
       // 每日必应 - 通过本地代理，自动处理302重定向
       const cached = getCache('bing');
@@ -118,7 +125,6 @@ const changeBg = async (type) => {
     } else if (type == 8) {
       // 4K壁纸 - 返回JSON，需要解析URL
       const data = await fetchJson("/api/4k");
-      // code可能是数字200或字符串"200"
       if ((data.code === 200 || data.code === "200") && data.data) {
         url = data.data;
       } else {
@@ -127,23 +133,29 @@ const changeBg = async (type) => {
     }
 
     if (url) {
-      await preloadImage(url);
+      // 本地图片直接赋值（<img> 标签自带加载，无需双重等待）。
+      // 仅远程图片才需要 preloadImage 预加载确认可访问后再赋值。
+      if (!isLocal) {
+        await preloadImage(url);
+      }
       bgUrl.value = url;
+      // 成功加载新图，重置降级标志
+      fallbackAttempted.value = false;
     }
   } catch (error) {
     console.error("壁纸加载失败:", error);
-    imgLoadError();
+    if (!fallbackAttempted.value) {
+      fallbackAttempted.value = true;
+      bgUrl.value = `/images/background${bgRandom}.jpg`;
+    }
   }
 };
 
 // 图片加载完成
+// 去掉了原来的 300-600ms 随机延迟：那是纯粹的装饰性等待，
+// 用户感受不到任何好处，只增加 Loading 显示时间（每次进站多等半秒）。
 const imgLoadComplete = () => {
-  imgTimeout.value = setTimeout(
-    () => {
-      store.setImgLoadStatus(true);
-    },
-    Math.floor(Math.random() * (600 - 300 + 1)) + 300,
-  );
+  store.setImgLoadStatus(true);
 };
 
 // 图片动画完成
@@ -153,18 +165,27 @@ const imgAnimationEnd = () => {
   emit("loadComplete");
 };
 
-// 图片显示失败
+// 图片显示失败 - 分层降级
+// 第一次失败：静默降级到本地图，给降级图一次机会（不打扰用户）
+// 降级图也失败：才通知用户（此时是真没图了）
 const imgLoadError = () => {
-  console.error("壁纸加载失败：", bgUrl.value);
+  if (!fallbackAttempted.value) {
+    // 第一次失败：尝试降级到本地图，不打扰用户
+    fallbackAttempted.value = true;
+    console.warn("壁纸加载失败，降级到默认图:", bgUrl.value);
+    bgUrl.value = `/images/background${bgRandom}.jpg`;
+    return;
+  }
+  // 降级图也失败了，这才是真正需要告诉用户的
+  console.error("壁纸最终加载失败（含降级图）:", bgUrl.value);
   ElMessage({
-    message: "壁纸加载失败，已临时切换回默认",
+    message: "壁纸加载失败，请检查网络连接",
+    grouping: true,
     icon: h(ErrorIcon, {
       theme: "filled",
       fill: "#efefef",
     }),
   });
-  // 随机选择一个默认图片
-  bgUrl.value = `/images/background${bgRandom}.jpg`;
 };
 
 // 监听壁纸切换

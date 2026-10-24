@@ -11,6 +11,8 @@ class SakuraEffect {
     this.isRunning = false;
     this.stopFunction = null;
     this.canvas = null;
+    // 保存浏览器原生 window.stop，外部脚本会覆盖它，destroy 时恢复
+    this._nativeStop = window.stop ? window.stop.bind(window) : null;
   }
 
   /**
@@ -110,9 +112,11 @@ class SakuraEffect {
     const canvases = document.querySelectorAll('canvas[data-sakura="true"]');
     canvases.forEach(el => el.remove());
 
-    // 清理可能的全局变量
-    if (window.stop) {
-      window.stop = null;
+    // 清理外部脚本对 window 的污染
+    // 注意：不能用 window.stop = null，那会删掉浏览器原生方法。
+    // 正确做法：恢复 init 前保存的原生 window.stop
+    if (this._nativeStop) {
+      window.stop = this._nativeStop;
     }
     if (window.staticx) {
       window.staticx = null;

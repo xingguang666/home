@@ -13,8 +13,12 @@
     <meta name="author" content="%VITE_SITE_AUTHOR%" />
     <meta name="theme-color" content="#424242" />
     <title>%VITE_SITE_NAME%</title>
-    <!-- HarmonyOS Sans -->
-    <link rel="stylesheet" href="https://s1.hdslb.com/bfs/static/jinkela/long/font/regular.css?v=%VITE_APP_VERSION%" />
+    <!-- HarmonyOS Sans - 异步加载，不阻塞首次渲染
+         原来是阻塞式 <link rel="stylesheet">，CDN 慢会卡住整个页面首次渲染。
+         改成 preload + onload 切换：浏览器先异步下载字体 CSS，
+         下载完成后才应用，不影响首屏渲染时机。 -->
+    <link rel="preload" as="style" href="https://s1.hdslb.com/bfs/static/jinkela/long/font/regular.css?v=%VITE_APP_VERSION%" onload="this.onload=null;this.rel='stylesheet'" />
+    <noscript><link rel="stylesheet" href="https://s1.hdslb.com/bfs/static/jinkela/long/font/regular.css?v=%VITE_APP_VERSION%" /></noscript>
     <!-- IE 检测 -->
     <script src="/utils/ie-detect.js"></script>
     <!-- 标签页标题动态变化 -->
@@ -55,8 +59,8 @@
         }
       })();
     </script>
-    <!-- jQuery (required by myhkw player) -->
-    <script src="https://unpkg.com/jquery@3.7.1/dist/jquery.min.js"></script>
+    <!-- jQuery (required by myhkw player) - defer 异步加载，不阻塞渲染 -->
+    <script defer src="https://unpkg.com/jquery@3.7.1/dist/jquery.min.js"></script>
     <!-- 播放器控制台日志屏蔽 -->
     <script src="/utils/console-guard.js"></script>
     <!-- myhkw.cn 音乐播放器 -->
