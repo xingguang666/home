@@ -281,8 +281,8 @@ onBeforeUnmount(() => {
       margin-bottom: 8px;
 
       input {
-        background: rgba(0, 0, 0, 0.18);
-        border: 1px solid rgba(255, 255, 255, 0.14);
+        background: var(--input-bg);
+        border: 1px solid var(--input-border);
         border-radius: 4px;
         padding: 5px 8px;
         color: var(--paper-warm);
@@ -292,7 +292,7 @@ onBeforeUnmount(() => {
         transition: border-color var(--dur-quick) var(--ease-soft);
 
         &:focus {
-          border-color: rgba(232, 228, 220, 0.45);
+          border-color: var(--input-border-focus);
         }
 
         &::placeholder {
@@ -334,7 +334,7 @@ onBeforeUnmount(() => {
       gap: 8px;
       padding: 4px 2px;
       font-size: 0.8125rem;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      border-bottom: 1px solid var(--row-divider);
 
       .feed-name {
         color: var(--paper-warm);
@@ -410,7 +410,7 @@ onBeforeUnmount(() => {
       gap: 10px;
       padding: 5px 4px;
       text-decoration: none;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      border-bottom: 1px solid var(--row-divider);
       transition: background var(--dur-quick) var(--ease-soft);
 
       &:last-child {
@@ -418,7 +418,7 @@ onBeforeUnmount(() => {
       }
 
       &:hover {
-        background: rgba(255, 255, 255, 0.04);
+        background: var(--row-hover);
 
         .item-title {
           color: var(--paper-pure);

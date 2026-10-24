@@ -124,10 +124,10 @@ const siteUrl = computed(() => {
   .song-info {
     animation: fade 0.3s;
     .song-name {
-      color: rgba(255, 255, 255, 0.85);
+      color: var(--text-main, rgba(255, 255, 255, 0.85));
     }
     .song-artist {
-      color: rgba(255, 255, 255, 0.6);
+      color: var(--paper-soft, rgba(255, 255, 255, 0.6));
     }
   }
   &.blur {

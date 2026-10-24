@@ -77,6 +77,7 @@
             </el-collapse-item>
 
             <el-collapse-item title="个性化调整" name="2">
+              <SetItem label="宣纸模式（日间主题）" v-model="siteTheme" active-value="paper" inactive-value="ink" />
               <SetItem label="建站日期显示" v-model="siteStartShow" />
               <SetItem label="樱花飘落特效" v-model="snowShow" />
               <SetItem label="音乐点击是否打开面板" v-model="musicClick" />
@@ -117,7 +118,7 @@ import config from "@/../package.json";
 const store = mainStore();
 const musicStore = useMusicStore();
 
-const { coverType, siteStartShow, snowShow } = storeToRefs(store);
+const { coverType, siteStartShow, snowShow, siteTheme } = storeToRefs(store);
 const {
   musicClick,
   playerLrcShow,
@@ -150,16 +151,17 @@ const siteUrl = computed(() => {
 // Update Log Data
 const upData = reactive({
   new: [
-    "新增知乎热榜、B站热榜功能",
-    "AI助手全新UI设计，支持多模型切换",
-    "新增GLM-4-5模型支持",
-    "AI对话支持快捷提问功能",
-    "优化弹窗关闭按钮显示效果",
+    "宣纸模式：明暗双主题一键切换",
+    "网站链接可视化管理，设置面板直接增删改",
+    "RSS 订阅卡：多源订阅管理",
+    "热榜恢复知乎、新增今日头条",
+    "搜索聚合框、倒数日卡、天气逐小时详情",
   ],
   fix: [
-    "修复弹窗关闭按钮看不清的问题",
-    "优化热榜标签页布局",
-    "改进AI对话消息显示样式",
+    "修复进站音乐自动播放",
+    "修复假期倒计时负数、移动端菜单被遮挡",
+    "清理失效热榜源与控制台报错",
+    "依赖升级至 Vite 5",
   ],
 });
 

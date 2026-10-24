@@ -127,16 +127,15 @@ onBeforeUnmount(() => window.removeEventListener("keydown", handleKeydown));
     align-items: center;
     gap: 10px;
     padding: 8px 12px;
-    border: 1px solid rgba(255, 255, 255, 0.14);
+    border: 1px solid var(--input-border);
     border-radius: 4px;
-    background: rgba(0, 0, 0, 0.14);
+    background: var(--input-bg);
     transition:
       border-color var(--dur-quick) var(--ease-soft),
       background var(--dur-quick) var(--ease-soft);
 
     &.focusing {
-      border-color: rgba(232, 228, 220, 0.45);
-      background: rgba(0, 0, 0, 0.22);
+      border-color: var(--input-border-focus);
     }
 
     input {

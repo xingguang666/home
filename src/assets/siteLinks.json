@@ -5,12 +5,6 @@
     "link": "https://dailyhot-api.zhijieqianyan.cn/"
   },
   {
-    "icon": "Cloud",
-    "name": "AI对话（测试）",
-    "link": "#",
-    "action": "$openAIChat"
-  },
-  {
     "icon": "CompactDisc",
     "name": "音乐",
     "link": "/404.html"

@@ -61,7 +61,9 @@ const loadCustomLinks = () => {
   try {
     const raw = localStorage.getItem("custom_site_links");
     const arr = raw ? JSON.parse(raw) : null;
-    customLinks.value = Array.isArray(arr) && arr.length ? arr : null;
+    // 只采纳名称与网址都完整的行，脏数据回落到默认配置
+    const valid = Array.isArray(arr) ? arr.filter((i) => i.name && i.url) : null;
+    customLinks.value = valid && valid.length ? valid : null;
   } catch {
     customLinks.value = null;
   }

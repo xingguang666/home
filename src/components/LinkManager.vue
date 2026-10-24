@@ -51,12 +51,18 @@ const loadLinks = () => {
 
 const links = ref(loadLinks());
 
-// 任意变更即时保存并通知首页 Links 组件热更新
+// 行是否已填写完整（名称 + 合法网址）
+const isComplete = (item) => item.name.trim() && /^https?:\/\/.+/.test(item.url.trim());
+
+// 任意变更即时保存并通知首页 Links 组件热更新。
+// 只持久化填写完整的行：避免「点了添加还没填完」的空行被保存，
+// 用一条空记录把默认链接列表整个顶掉。
 watch(
   links,
   (val) => {
-    if (val.length) {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(val));
+    const complete = val.filter(isComplete);
+    if (complete.length) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(complete));
     } else {
       localStorage.removeItem(STORAGE_KEY);
     }

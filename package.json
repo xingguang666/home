@@ -4,7 +4,7 @@
   "github": "https://zhijieqianyan.cn/",
   "home": "https://zhijieqianyan.cn/",
   "private": true,
-  "version": "2.1.0",
+  "version": "2.2.0",
   "type": "module",
   "scripts": {
     "dev": "vite --host",

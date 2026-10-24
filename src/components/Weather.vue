@@ -182,11 +182,11 @@ onBeforeUnmount(() => {
   width: min(520px, 82vw);
   padding: 14px 16px;
   border-radius: 12px;
-  background: linear-gradient(135deg, rgba(42, 38, 32, 0.92), rgba(26, 24, 21, 0.88));
+  background: linear-gradient(135deg, var(--popover-bg-1), var(--popover-bg-2));
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
-  border: 1px solid rgba(232, 228, 220, 0.14);
-  border-top-color: rgba(232, 228, 220, 0.28);
+  border: 1px solid var(--popover-border);
+  border-top-color: var(--popover-border-top);
   box-shadow:
     0 12px 32px 0 rgba(0, 0, 0, 0.32),
     inset 0 1px 0 rgba(232, 228, 220, 0.1);
@@ -226,7 +226,7 @@ onBeforeUnmount(() => {
       transition: background var(--dur-quick) var(--ease-soft);
 
       &:hover {
-        background: rgba(232, 228, 220, 0.06);
+        background: var(--row-hover);
       }
 
       .h-time {
@@ -255,7 +255,7 @@ onBeforeUnmount(() => {
     gap: var(--sp-xs);
     margin-top: 8px;
     padding-top: 8px;
-    border-top: 1px solid rgba(232, 228, 220, 0.08);
+    border-top: 1px solid var(--row-divider);
     font-size: 0.75rem;
     color: var(--paper-soft);
     letter-spacing: 0.04em;

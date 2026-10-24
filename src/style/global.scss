@@ -49,6 +49,79 @@
   --sp-xl: 64px;
   --sp-xxl: 96px;
   --sp-super: 128px;
+
+  /* ── 主题化表面令牌（默认 = 墨底）──
+     宣纸模式在 html[data-theme="paper"] 中整体反转这些变量，
+     组件只允许引用变量，不允许硬编码黑白色值。 */
+  --text-main: #efefef;
+  --glass-bg-1: rgba(255, 255, 255, 0.1);
+  --glass-bg-2: rgba(255, 255, 255, 0.05);
+  --glass-border: rgba(255, 255, 255, 0.15);
+  --glass-border-top: rgba(255, 255, 255, 0.3);
+  --glass-highlight: rgba(255, 255, 255, 0.18);
+  --glass-shadow: 0 8px 28px 0 rgba(0, 0, 0, 0.12);
+  --glass-hover-bg-1: rgba(255, 255, 255, 0.15);
+  --glass-hover-bg-2: rgba(255, 255, 255, 0.1);
+  --glass-hover-border-top: rgba(255, 255, 255, 0.4);
+  --glass-hover-highlight: rgba(255, 255, 255, 0.24);
+  --glass-hover-shadow: 0 12px 32px 0 rgba(0, 0, 0, 0.18);
+  --input-bg: rgba(0, 0, 0, 0.18);
+  --input-border: rgba(255, 255, 255, 0.14);
+  --input-border-focus: rgba(232, 228, 220, 0.45);
+  --row-hover: rgba(255, 255, 255, 0.04);
+  --row-divider: rgba(255, 255, 255, 0.06);
+  --popover-bg-1: rgba(42, 38, 32, 0.92);
+  --popover-bg-2: rgba(26, 24, 21, 0.88);
+  --popover-border: rgba(232, 228, 220, 0.14);
+  --popover-border-top: rgba(232, 228, 220, 0.28);
+}
+
+/* ── 宣纸模式（日间主题）──
+   计白当黑：paper 令牌反转为墨色文字，玻璃卡变纸白，
+   壁纸保留为底，卡片如纸浮于墨景。 */
+html[data-theme="paper"] {
+  /* 文字令牌反转：纸上墨字 */
+  --paper-pure: #1a1815;
+  --paper-warm: #33302a;
+  --paper-soft: #6a6155;
+  --paper-muted: rgba(26, 24, 21, 0.45);
+
+  --text-main: #232017;
+
+  /* 纸白玻璃 */
+  --glass-bg-1: rgba(255, 255, 255, 0.72);
+  --glass-bg-2: rgba(246, 243, 237, 0.55);
+  --glass-border: rgba(26, 24, 21, 0.1);
+  --glass-border-top: rgba(255, 255, 255, 0.85);
+  --glass-highlight: rgba(255, 255, 255, 0.6);
+  --glass-shadow: 0 8px 28px 0 rgba(26, 24, 21, 0.1);
+  --glass-hover-bg-1: rgba(255, 255, 255, 0.85);
+  --glass-hover-bg-2: rgba(246, 243, 237, 0.7);
+  --glass-hover-border-top: #ffffff;
+  --glass-hover-highlight: rgba(255, 255, 255, 0.8);
+  --glass-hover-shadow: 0 12px 32px 0 rgba(26, 24, 21, 0.16);
+
+  --input-bg: rgba(255, 255, 255, 0.6);
+  --input-border: rgba(26, 24, 21, 0.14);
+  --input-border-focus: rgba(26, 24, 21, 0.4);
+  --row-hover: rgba(26, 24, 21, 0.05);
+  --row-divider: rgba(26, 24, 21, 0.08);
+
+  --popover-bg-1: rgba(255, 253, 249, 0.96);
+  --popover-bg-2: rgba(246, 243, 237, 0.94);
+  --popover-border: rgba(26, 24, 21, 0.12);
+  --popover-border-top: rgba(255, 255, 255, 0.9);
+
+  /* 硬编码 #efefef/#ffffff 的 icon-park 图标反转为墨色 */
+  svg [fill="#efefef"] {
+    fill: #33302a;
+  }
+  svg [fill="#ffffff"] {
+    fill: #33302a;
+  }
+  svg [fill="#ffffff60"] {
+    fill: rgba(26, 24, 21, 0.55);
+  }
 }
 
 // 响应式布局
@@ -68,35 +141,29 @@
 
 // 苹果液态玻璃设计风格 Mixin
 // 2026-10 材质升级：吸收 nozoki.soki.moe 提取的「环境阴影 + 顶部内高光」技法，
-// 过渡改用令牌缓动（此前为 all .3s ease，违反 DESIGN.md 缓动纪律）。
+// 过渡改用令牌缓动；所有色值走主题令牌（宣纸模式整体反转，见 :root 注释）。
 @mixin glass-card($blur: 10px, $radius: 12px) {
   // 背景：微妙的线性渐变，模拟玻璃反光
-  background: linear-gradient(
-    135deg,
-    rgba(255, 255, 255, 0.1),
-    rgba(255, 255, 255, 0.05)
-  );
+  background: linear-gradient(135deg, var(--glass-bg-1), var(--glass-bg-2));
 
   // 核心磨砂效果
   backdrop-filter: blur($blur);
   -webkit-backdrop-filter: blur($blur);
 
-  // 边框：半透明白色，模拟玻璃边缘高光
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  border-top: 1px solid rgba(255, 255, 255, 0.3);
-  border-left: 1px solid rgba(255, 255, 255, 0.3);
+  // 边框：半透明，模拟玻璃边缘高光
+  border: 1px solid var(--glass-border);
+  border-top: 1px solid var(--glass-border-top);
+  border-left: 1px solid var(--glass-border-top);
 
   // 圆角
   border-radius: $radius;
 
   // 阴影：大半径低透明度环境阴影 + 顶部 1px 内高光（玻璃卡厚度感的关键）
   box-shadow:
-    0 8px 28px 0 rgba(0, 0, 0, 0.12),
-    inset 0 1px 0 rgba(255, 255, 255, 0.18);
+    var(--glass-shadow),
+    inset 0 1px 0 var(--glass-highlight);
 
   // 性能优化：硬件加速（隔离合成层，避免 backdrop-filter 与其它层相互影响）
-  // 注意：will-change 只声明 transform，不声明 backdrop-filter（后者 will-change 无意义
-  // 且永久 will-change 会浪费 GPU 内存——正确做法是只在即将变化的元素上临时使用）
   transform: translateZ(0);
 
   // 过渡效果：只过渡实际会变的属性，使用令牌缓动
@@ -108,16 +175,12 @@
 
   // 悬停效果
   &:hover {
-    background: linear-gradient(
-      135deg,
-      rgba(255, 255, 255, 0.15),
-      rgba(255, 255, 255, 0.1)
-    );
-    border-top: 1px solid rgba(255, 255, 255, 0.4);
-    border-left: 1px solid rgba(255, 255, 255, 0.4);
+    background: linear-gradient(135deg, var(--glass-hover-bg-1), var(--glass-hover-bg-2));
+    border-top: 1px solid var(--glass-hover-border-top);
+    border-left: 1px solid var(--glass-hover-border-top);
     box-shadow:
-      0 12px 32px 0 rgba(0, 0, 0, 0.18),
-      inset 0 1px 0 rgba(255, 255, 255, 0.24);
+      var(--glass-hover-shadow),
+      inset 0 1px 0 var(--glass-hover-highlight);
   }
 }
 
