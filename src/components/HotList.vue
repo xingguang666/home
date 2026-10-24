@@ -78,22 +78,25 @@
 </template>
 
 <script setup>
-import { Fire, CloseOne, RefreshOne, Error, VideoOne, Search } from "@icon-park/vue-next";
+import { Fire, CloseOne, RefreshOne, Error, VideoOne, Search, ReadBook, Trend, Youtube, Book, Github } from "@icon-park/vue-next";
 import { mainStore } from "@/store";
 
 const store = mainStore();
 
-// 热榜配置
-// 2026-10 清理：知乎/B站/微信读书/豆瓣/GitHub 五个源走 apiserver.alcex.cn
-// 代理（/api/daily-hot），该服务器已整站下线（连接失败），故删除；
-// 仅保留实测存活的直连源：百度 / 微博 / 抖音。
+// 热榜配置（2026-10 重构）
+// 1. 直连源均为实测存活的公共 API，不再依赖任何人的私有部署（此前
+//    apiserver.alcex.cn 整站下线导致 5 个源集体 521）。
+// 2. B站/微信读书/豆瓣/GitHub 无稳定公共源——在 .env 配置 VITE_DAILYHOT_API
+//    （自部署 https://github.com/imsyy/DailyHotApi，Vercel 一键免费部署）
+//    后自动启用；此时知乎也切换到自部署实例以获得原文直链。
+const DAILYHOT_API = (import.meta.env.VITE_DAILYHOT_API || "").replace(/\/+$/, "");
+
 const tabs = [
   {
     key: 'baidu',
     name: '百度',
     icon: Search,
     apiUrl: 'https://v2.xxapi.cn/api/baiduhot',
-    dataField: 'data',
     getUrl: (item) => item.url || `https://www.baidu.com/s?wd=${encodeURIComponent(item.title)}`
   },
   {
@@ -101,17 +104,62 @@ const tabs = [
     name: '微博',
     icon: Fire,
     apiUrl: 'https://oiapi.net/api/WeiBoHot',
-    dataField: 'data',
     getUrl: (item) => item.url || `https://s.weibo.com/weibo?q=${encodeURIComponent(item.title)}`
+  },
+  {
+    key: 'zhihu',
+    name: '知乎',
+    icon: ReadBook,
+    apiUrl: DAILYHOT_API ? `${DAILYHOT_API}/zhihu?limit=20` : 'https://oiapi.net/api/ZhiHuHot',
+    getUrl: (item) => item.url || `https://www.zhihu.com/search?q=${encodeURIComponent(item.title)}`
   },
   {
     key: 'douyin',
     name: '抖音',
     icon: VideoOne,
     apiUrl: 'https://oiapi.net/api/DouYinHot',
-    dataField: 'data',
     getUrl: (item) => item.url || `https://www.douyin.com/search/${encodeURIComponent(item.title)}`
-  }
+  },
+  {
+    key: 'toutiao',
+    name: '头条',
+    icon: Trend,
+    apiUrl: 'https://60s.viki.moe/v2/toutiao',
+    getUrl: (item) => item.link || item.url || `https://so.toutiao.com/search?keyword=${encodeURIComponent(item.title)}`
+  },
+  // 以下源需要自部署 DailyHotApi 才启用
+  ...(DAILYHOT_API
+    ? [
+        {
+          key: 'bilibili',
+          name: 'B站',
+          icon: Youtube,
+          apiUrl: `${DAILYHOT_API}/bilibili?limit=20`,
+          getUrl: (item) => item.url || `https://search.bilibili.com/all?keyword=${encodeURIComponent(item.title)}`
+        },
+        {
+          key: 'weread',
+          name: '微信读书',
+          icon: Book,
+          apiUrl: `${DAILYHOT_API}/weread?limit=20`,
+          getUrl: (item) => item.url || `https://weread.qq.com/web/search/books?keyword=${encodeURIComponent(item.title)}`
+        },
+        {
+          key: 'douban',
+          name: '豆瓣',
+          icon: Fire,
+          apiUrl: `${DAILYHOT_API}/douban-group?limit=20`,
+          getUrl: (item) => item.url || `https://www.douban.com/search?q=${encodeURIComponent(item.title)}`
+        },
+        {
+          key: 'github',
+          name: 'GitHub',
+          icon: Github,
+          apiUrl: `${DAILYHOT_API}/github?limit=20`,
+          getUrl: (item) => item.url || `https://github.com/search?q=${encodeURIComponent(item.title)}`
+        },
+      ]
+    : []),
 ];
 
 // 数据状态
