@@ -115,8 +115,10 @@ export default ({ mode }) => {
       preprocessorOptions: {
         scss: {
           api: 'modern',
-          additionalData: `@use "./src/style/global.scss" as *;`,
-          silenceDeprecations: ["legacy-js-api"],
+          // vite5 + sass modern API 下，additionalData 的相对路径按「被编译文件」
+          // 所在目录解析（组件散布在多个目录，相对路径必挂），改用配置期绝对路径。
+          additionalData: `@use "${resolve(__dirname, "src/style/global.scss").replace(/\\/g, "/")}" as *;`,
+          silenceDeprecations: ["legacy-js-api", "import", "global-builtin"],
         },
       },
     },
