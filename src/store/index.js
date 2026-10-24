@@ -7,8 +7,6 @@ export const mainStore = defineStore("main", {
     innerWidth: null,
     coverType: "0",
     siteStartShow: false,
-    // 站点主题：ink 墨底（默认）| paper 宣纸底
-    siteTheme: "ink",
     backgroundShow: false,
     snowShow: false,
     boxOpenState: false,
@@ -40,7 +38,6 @@ export const mainStore = defineStore("main", {
     paths: [
       "coverType",
       "siteStartShow",
-      "siteTheme",
     ],
   },
 });

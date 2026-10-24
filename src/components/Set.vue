@@ -77,7 +77,6 @@
             </el-collapse-item>
 
             <el-collapse-item title="个性化调整" name="2">
-              <SetItem label="宣纸模式（日间主题）" v-model="siteTheme" active-value="paper" inactive-value="ink" />
               <SetItem label="建站日期显示" v-model="siteStartShow" />
               <SetItem label="樱花飘落特效" v-model="snowShow" />
               <SetItem label="音乐点击是否打开面板" v-model="musicClick" />
@@ -118,7 +117,7 @@ import config from "@/../package.json";
 const store = mainStore();
 const musicStore = useMusicStore();
 
-const { coverType, siteStartShow, snowShow, siteTheme } = storeToRefs(store);
+const { coverType, siteStartShow, snowShow } = storeToRefs(store);
 const {
   musicClick,
   playerLrcShow,
@@ -151,7 +150,6 @@ const siteUrl = computed(() => {
 // Update Log Data
 const upData = reactive({
   new: [
-    "宣纸模式：明暗双主题一键切换",
     "网站链接可视化管理，设置面板直接增删改",
     "RSS 订阅卡：多源订阅管理",
     "热榜恢复知乎、新增今日头条",

@@ -50,9 +50,9 @@
   --sp-xxl: 96px;
   --sp-super: 128px;
 
-  /* ── 主题化表面令牌（默认 = 墨底）──
-     宣纸模式在 html[data-theme="paper"] 中整体反转这些变量，
-     组件只允许引用变量，不允许硬编码黑白色值。 */
+  /* ── 主题化表面令牌（墨底）──
+     组件只允许引用变量，不允许硬编码黑白色值；
+     若日后需要日间主题，在 html[data-theme] 中整体反转这些变量即可。 */
   --text-main: #efefef;
   --glass-bg-1: rgba(255, 255, 255, 0.1);
   --glass-bg-2: rgba(255, 255, 255, 0.05);
@@ -76,54 +76,6 @@
   --popover-border-top: rgba(232, 228, 220, 0.28);
 }
 
-/* ── 宣纸模式（日间主题）──
-   计白当黑：paper 令牌反转为墨色文字，玻璃卡变纸白，
-   壁纸保留为底，卡片如纸浮于墨景。 */
-html[data-theme="paper"] {
-  /* 文字令牌反转：纸上墨字 */
-  --paper-pure: #1a1815;
-  --paper-warm: #33302a;
-  --paper-soft: #6a6155;
-  --paper-muted: rgba(26, 24, 21, 0.45);
-
-  --text-main: #232017;
-
-  /* 纸白玻璃 */
-  --glass-bg-1: rgba(255, 255, 255, 0.72);
-  --glass-bg-2: rgba(246, 243, 237, 0.55);
-  --glass-border: rgba(26, 24, 21, 0.1);
-  --glass-border-top: rgba(255, 255, 255, 0.85);
-  --glass-highlight: rgba(255, 255, 255, 0.6);
-  --glass-shadow: 0 8px 28px 0 rgba(26, 24, 21, 0.1);
-  --glass-hover-bg-1: rgba(255, 255, 255, 0.85);
-  --glass-hover-bg-2: rgba(246, 243, 237, 0.7);
-  --glass-hover-border-top: #ffffff;
-  --glass-hover-highlight: rgba(255, 255, 255, 0.8);
-  --glass-hover-shadow: 0 12px 32px 0 rgba(26, 24, 21, 0.16);
-
-  --input-bg: rgba(255, 255, 255, 0.6);
-  --input-border: rgba(26, 24, 21, 0.14);
-  --input-border-focus: rgba(26, 24, 21, 0.4);
-  --row-hover: rgba(26, 24, 21, 0.05);
-  --row-divider: rgba(26, 24, 21, 0.08);
-
-  --popover-bg-1: rgba(255, 253, 249, 0.96);
-  --popover-bg-2: rgba(246, 243, 237, 0.94);
-  --popover-border: rgba(26, 24, 21, 0.12);
-  --popover-border-top: rgba(255, 255, 255, 0.9);
-
-  /* 硬编码 #efefef/#ffffff 的 icon-park 图标反转为墨色 */
-  svg [fill="#efefef"] {
-    fill: #33302a;
-  }
-  svg [fill="#ffffff"] {
-    fill: #33302a;
-  }
-  svg [fill="#ffffff60"] {
-    fill: rgba(26, 24, 21, 0.55);
-  }
-}
-
 // 响应式布局
 @mixin changeWidth($maxWidth: 1200px) {
   .container {
@@ -141,7 +93,7 @@ html[data-theme="paper"] {
 
 // 苹果液态玻璃设计风格 Mixin
 // 2026-10 材质升级：吸收 nozoki.soki.moe 提取的「环境阴影 + 顶部内高光」技法，
-// 过渡改用令牌缓动；所有色值走主题令牌（宣纸模式整体反转，见 :root 注释）。
+// 过渡改用令牌缓动；所有色值走主题令牌（见 :root 注释）。
 @mixin glass-card($blur: 10px, $radius: 12px) {
   // 背景：微妙的线性渐变，模拟玻璃反光
   background: linear-gradient(135deg, var(--glass-bg-1), var(--glass-bg-2));

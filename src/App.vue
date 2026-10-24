@@ -62,16 +62,6 @@ const MoyuCalendar = defineAsyncComponent(() => import("@/components/MoyuCalenda
 
 const store = mainStore();
 
-// 应用主题（ink 墨底 / paper 宣纸底）到 <html data-theme>
-const applyTheme = (theme) => {
-  document.documentElement.setAttribute("data-theme", theme === "paper" ? "paper" : "ink");
-};
-applyTheme(store.siteTheme);
-watch(
-  () => store.siteTheme,
-  (val) => applyTheme(val),
-);
-
 // 页面宽度
 const getWidth = () => {
   store.setInnerWidth(window.innerWidth);
